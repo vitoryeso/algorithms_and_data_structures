@@ -8,13 +8,20 @@ def merge(A, p, q, r):
     C.append(999999999)
     D.append(999999999)
     i = j = 0
-    for k in range(p, r):
+    for k in range(p, r + 1):
         if C[i] >= D[j]:
             A[k] = D[j]
             j += 1
         else:
             A[k] = C[i]
             i += 1
+
+def merge_sort(A, p, r):
+    if p < r:
+        q = int((p + r)/2)
+        merge_sort(A, p, q)
+        merge_sort(A, q + 1, r)
+        merge(A, p, q, r)
 
 def selection_sort(A):
     for i in range(len(A) - 1):
@@ -44,11 +51,7 @@ print("A sorted with inserction: ", A)
 A = [1,4,3,56,7,34,3,6,2,3,5,11,2]
 selection_sort(A)
 print("A sorted with selection: ", A)
+A = [1,4,3,56,7,34,3,6,2,3,5,11,2]
+merge_sort(A, 0, len(A) - 1)
+print("A sorted with merge: ", A)
 
-A = [2,321,432,4,32,1,2,3,4,5,3,5,7,18,99,0,23,11]
-# p = 5; q = 9; r = 14
-answer =[2,321,432,4,32,1,2,3,3,4,5,5,7,18,99,0,23,11] 
-print("input: {}, 5, 9, 14".format(A))
-print("desired output: ", answer)
-merge(A, 5, 9, 14)
-print("output: ", A)
