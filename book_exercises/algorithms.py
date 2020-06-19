@@ -48,7 +48,7 @@ print("A sorted with selection: ", A)
 A = [2,321,432,4,32,1,2,3,4,5,3,5,7,18,99,0,23,11]
 # p = 5; q = 9; r = 14
 answer =[2,321,432,4,32,1,2,3,3,4,5,5,7,18,99,0,23,11] 
-print("entrada: ", A)
-print("resposta: ", answer)
+print("input: {}, 5, 9, 14".format(A))
+print("desired output: ", answer)
 merge(A, 5, 9, 14)
-print("saida do merge: ", A)
+print("output: ", A)
