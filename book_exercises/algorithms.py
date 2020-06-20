@@ -64,7 +64,7 @@ def selection_sort(A):
         A[id_] = A[i]
         A[i] = min_
 
-def inserction_sort(A):
+def insertion_sort(A):
     for j in range(1, len(A)):
         key = A[j]
         i = j - 1
@@ -73,18 +73,38 @@ def inserction_sort(A):
             i -= 1
         A[i + 1] = key
 
-A = [1,4,3,56,7,34,3,6,2,3,5,11,2]
+def recursive_insertion_sort(A, n):
+    if n > 0:
+        recursive_insertion_sort(A, n - 1)
+        key = A[n]
+        i = n - 1
+        while A[i] > key and i >=0:
+            A[i + 1]  = A[i]
+            i -= 1
+        A[i + 1] = key
 
+A = [1,4,3,56,7,34,3,6,2,3,5,11,2]
 print("A: ", A)
-inserction_sort(A)
-print("A sorted with inserction: ", A)
+insertion_sort(A)
+print("A sorted with insertion: ", A, end="\n\n")
+
 A = [1,4,3,56,7,34,3,6,2,3,5,11,2]
+print("A: ", A)
+recursive_insertion_sort(A, len(A) - 1)
+print("A sorted with recursive insertion: ", A, end="\n\n")
+
+A = [1,4,3,56,7,34,3,6,2,3,5,11,2]
+print("A: ", A)
 selection_sort(A)
-print("A sorted with selection: ", A)
+print("A sorted with selection: ", A, end="\n\n")
+
 A = [1,4,3,56,7,34,3,6,2,3,5,11,2]
+print("A: ", A)
 merge_sort(A, 0, len(A) - 1)
-print("A sorted with merge: ", A)
+print("A sorted with merge: ", A, end="\n\n")
+
 A = [1,4,3,56,7,34,3,6,2,3,5,11,2]
+print("A: ", A)
 merge_sort_2(A, 0, len(A) - 1)
-print("A sorted with merge_2: ", A)
+print("A sorted with merge_2: ", A, end="\n\n")
 
