@@ -1,10 +1,33 @@
+def merge_2(A, p, q, r):
+    n1 = q - p
+    n2 = r - (q + 1)
+    C = [ A[p + i] for i in range(n1 + 1) ]
+    D = [ A[q + 1 + i] for i in range(n2 + 1) ]
+    k = p
+    i = j = 0
+    while k <= r and i <= n1 and j <= n2:
+        if C[i] >= D[j]:
+            A[k] = D[j]
+            j += 1
+        else:
+            A[k] = C[i]
+            i += 1
+        k += 1
+    if k <= r:
+        if j > n2:
+            for k_ in range(k, r+1):
+                A[k_] = C[i]
+                i += 1
+        else:
+            for k_ in range(k, r+1):
+                A[k_] = D[j]
+                j += 1
+        
 def merge(A, p, q, r): 
     n1 = q - p
     n2 = r - (q + 1)
     C = [ A[p + i] for i in range(n1 + 1) ]
     D = [ A[q + 1 + i] for i in range(n2 + 1) ]
-    print("C: ", C)
-    print("D: ", D)
     C.append(999999999)
     D.append(999999999)
     i = j = 0
@@ -15,6 +38,13 @@ def merge(A, p, q, r):
         else:
             A[k] = C[i]
             i += 1
+
+def merge_sort_2(A, p, r):
+    if p < r:
+        q = int((p + r)/2)
+        merge_sort_2(A, p, q)
+        merge_sort_2(A, q + 1, r)
+        merge_2(A, p, q, r)
 
 def merge_sort(A, p, r):
     if p < r:
@@ -54,4 +84,7 @@ print("A sorted with selection: ", A)
 A = [1,4,3,56,7,34,3,6,2,3,5,11,2]
 merge_sort(A, 0, len(A) - 1)
 print("A sorted with merge: ", A)
+A = [1,4,3,56,7,34,3,6,2,3,5,11,2]
+merge_sort_2(A, 0, len(A) - 1)
+print("A sorted with merge_2: ", A)
 
