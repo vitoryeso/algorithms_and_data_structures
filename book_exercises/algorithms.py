@@ -1,3 +1,15 @@
+def binary_search(A, p, r, v):
+    if r > p:
+        q = int((r + p)/2)
+        if v > A[q]:
+            return binary_search(A, q + 1, r, v)
+        else: 
+            return binary_search(A, p, q, v)
+    if v == A[p]:
+        return p
+    else:
+        return None
+
 def merge_2(A, p, q, r):
     n1 = q - p
     n2 = r - (q + 1)
@@ -107,4 +119,8 @@ A = [1,4,3,56,7,34,3,6,2,3,5,11,2]
 print("A: ", A)
 merge_sort_2(A, 0, len(A) - 1)
 print("A sorted with merge_2: ", A, end="\n\n")
+
+print("A: ", A)
+i = binary_search(A, 0, len(A) - 1, 6)
+print("search index of 56 value using binary_search: ", i, end="\n\n")
 
