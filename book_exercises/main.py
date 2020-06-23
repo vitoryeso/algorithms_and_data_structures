@@ -1,7 +1,7 @@
 from copy import copy
 from luAlgorithm import binary_search, merge_sort, selection_sort, insertion_sort, recursive_insertion_sort, match_sum, merge
 
-k = 4
+k = 6
 
 def merge_modified(A, p, r):
     if r > p + 1:
@@ -10,8 +10,7 @@ def merge_modified(A, p, r):
         merge_modified(A, q + 1, r)
         global k
         if (r - p) < k:
-            insertion_sort(A, p, q)
-            insertion_sort(A, q + 1, r) 
+            insertion_sort(A, p, r)
         else:
             merge.merge(A, p, q, r)
  
