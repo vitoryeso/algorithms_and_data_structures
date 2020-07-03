@@ -10,6 +10,8 @@ void insertion_sort(vector<int>& V);
 void merge(vector<int>& V, vector<int>& V1, vector<int>& V2);
 void merge_sort(vector<int>& V);
 void quick_sort(vector<int>& V);
+void quick_sort(vector<int>& V, const unsigned p, const unsigned r);
+const unsigned partition(vector<int>& V, const unsigned p, const unsigned r);
 
 int main(){
     vector<int> V {1,4,3,5,3,5,6,6,74,7,5,-3};
@@ -41,6 +43,16 @@ int main(){
     
     cout << "arranjo V3 ordenado com o merge_sort = ";
     merge_sort(V3);
+    print_vector(V3);
+    cout << endl;
+
+    vector<int> V4 {1,4,3,5,3,5,6,6,74,7,5,-3};
+    cout << "arranjo V4 = ";
+    print_vector(V4);
+    cout << endl;
+    
+    cout << "arranjo V4 ordenado com o quick_sort = ";
+    quick_sort(V3);
     print_vector(V3);
     cout << endl;
 
@@ -120,5 +132,30 @@ void merge_sort(vector<int>& V){
 
     V.clear();
     merge(V, V1, V2);
+}
+
+void quick_sort(vector<int>& V){
+    quick_sort(V, 0, V.size() - 1);
+}
+
+void quick_sort(vector<int>& V, const unsigned p, const unsigned r) {
+    if(r > p) {
+        const unsigned q = partition(V, p, r);
+        quick_sort(V, p, q - 1);
+        quick_sort(V, q + 1, r);
+    }
+}
+
+const unsigned partition(vector<int>& V, const unsigned p, const unsigned r) {
+    // pivot = V[r]
+    int i = p - 1;
+    for(unsigned j=p; j<r; j++) {
+        if(V[j] < V[r]) {
+            swap(V[i + 1], V[j]);
+            i++;
+        }
+    }
+    swap(V[i + 1], V[r]);
+    return i + 1;
 }
 
