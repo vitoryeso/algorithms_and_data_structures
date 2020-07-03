@@ -1,5 +1,6 @@
 #include <iostream>
 #include <random>
+#include <string>
 #include <vector>
 
 using namespace std;
@@ -7,14 +8,21 @@ using namespace std;
 void print_vector(vector<int>& V);
 
 void selection_sort(vector<int>& V);
+
 void insertion_sort(vector<int>& V);
+
 void merge(vector<int>& V, vector<int>& V1, vector<int>& V2);
 void merge_sort(vector<int>& V);
-void quick_sort(vector<int>& V, const bool randomized = true);
+
+void quick_sort(vector<int>& V, const string pivot_choice);
+
 void quick_sort(vector<int>& V, const unsigned p, const unsigned r);
-const unsigned partition(vector<int>& V, const unsigned p, const unsigned r);
 void randomized_quick_sort(vector<int>& V, const unsigned p, const unsigned r);
+void median3_quick_sort(vector<int>& V, const unsigned p, const unsigned r);
+
+const unsigned partition(vector<int>& V, const unsigned p, const unsigned r);
 const unsigned randomized_partition(vector<int>& V, const unsigned p, const unsigned r);
+const unsigned median3_partition(vector<int>& V, const unsigned p, const unsigned r);
 
 int main(){
     vector<int> V {1,4,3,5,3,5,6,6,74,7,5,-3};
@@ -55,7 +63,7 @@ int main(){
     cout << endl;
     
     cout << "arranjo V4 ordenado com o quick_sort = ";
-    quick_sort(V3, true);
+    quick_sort(V3, "median3");
     print_vector(V3);
     cout << endl;
 
@@ -137,11 +145,11 @@ void merge_sort(vector<int>& V){
     merge(V, V1, V2);
 }
 
-void quick_sort(vector<int>& V, const bool randomized) {
-    if(randomized) {
-        randomized_quick_sort(V, 0, V.size() - 1);
-    }
-    else quick_sort(V, 0, V.size() - 1);
+void quick_sort(vector<int>& V, const string pivot_choice) {
+        if(pivot_choice == "random") randomized_quick_sort(V, 0, V.size() - 1);
+        else if(pivot_choice == "median3") median3_quick_sort(V, 0, V.size() - 1);
+        else if(pivot_choice == "last") quick_sort(V, 0, V.size() - 1);
+        else randomized_quick_sort(V, 0, V.size() - 1);
 }
 
 void quick_sort(vector<int>& V, const unsigned p, const unsigned r) {
@@ -182,3 +190,21 @@ const unsigned randomized_partition(vector<int>& V, const unsigned p, const unsi
     swap(V[dist(rng)], V[r]);
     return partition(V, p, r);
 }
+
+void median3_quick_sort(vector<int>& V, const unsigned p, const unsigned r) {
+    if(r > p) {
+        unsigned q = median3_partition(V, p, r);
+        median3_quick_sort(V, p, q - 1);
+        median3_quick_sort(V, q + 1, r);
+    }
+}
+
+const unsigned median3_partition(vector<int>& V, const unsigned p, const unsigned r) {
+    int provId = (r - p)/2;
+    if(V[p] > V[provId]) { 
+        if(V[p] < V[r]) swap(V[p], V[r]);
+        else if(V[provId] > V[r]) swap(V[provId], V[r]);
+    }
+    return partition(V, p, r);
+}
+            
