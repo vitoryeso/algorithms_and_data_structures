@@ -9,6 +9,7 @@ void selection_sort(vector<int>& V);
 void insertion_sort(vector<int>& V);
 void merge(vector<int>& V, vector<int>& V1, vector<int>& V2);
 void merge_sort(vector<int>& V);
+void quick_sort(vector<int>& V);
 
 int main(){
     vector<int> V {1,4,3,5,3,5,6,6,74,7,5,-3};

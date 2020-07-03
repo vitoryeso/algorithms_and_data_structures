@@ -1,3 +1,7 @@
+from .swap import swap
+from .merge import merge
+from .partition import partition
+from .quick_sort import quick_sort
 from .match_sum import match_sum
 from .insertion_sort import insertion_sort
 from .binary_search import binary_search
