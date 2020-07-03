@@ -1,4 +1,5 @@
 #include <iostream>
+#include <random>
 #include <vector>
 
 using namespace std;
@@ -9,9 +10,11 @@ void selection_sort(vector<int>& V);
 void insertion_sort(vector<int>& V);
 void merge(vector<int>& V, vector<int>& V1, vector<int>& V2);
 void merge_sort(vector<int>& V);
-void quick_sort(vector<int>& V);
+void quick_sort(vector<int>& V, const bool randomized = true);
 void quick_sort(vector<int>& V, const unsigned p, const unsigned r);
 const unsigned partition(vector<int>& V, const unsigned p, const unsigned r);
+void randomized_quick_sort(vector<int>& V, const unsigned p, const unsigned r);
+const unsigned randomized_partition(vector<int>& V, const unsigned p, const unsigned r);
 
 int main(){
     vector<int> V {1,4,3,5,3,5,6,6,74,7,5,-3};
@@ -52,7 +55,7 @@ int main(){
     cout << endl;
     
     cout << "arranjo V4 ordenado com o quick_sort = ";
-    quick_sort(V3);
+    quick_sort(V3, true);
     print_vector(V3);
     cout << endl;
 
@@ -134,8 +137,11 @@ void merge_sort(vector<int>& V){
     merge(V, V1, V2);
 }
 
-void quick_sort(vector<int>& V){
-    quick_sort(V, 0, V.size() - 1);
+void quick_sort(vector<int>& V, const bool randomized) {
+    if(randomized) {
+        randomized_quick_sort(V, 0, V.size() - 1);
+    }
+    else quick_sort(V, 0, V.size() - 1);
 }
 
 void quick_sort(vector<int>& V, const unsigned p, const unsigned r) {
@@ -159,3 +165,20 @@ const unsigned partition(vector<int>& V, const unsigned p, const unsigned r) {
     return i + 1;
 }
 
+void randomized_quick_sort(vector<int>& V, const unsigned p, const unsigned r) {
+    if(r > p) {
+        unsigned q = randomized_partition(V, p, r);
+        randomized_quick_sort(V, p, q - 1);
+        randomized_quick_sort(V, q + 1, r);
+    }
+}
+
+const unsigned randomized_partition(vector<int>& V, const unsigned p, const unsigned r) {
+    random_device dev;
+    mt19937 rng(dev());
+    uniform_int_distribution<mt19937::result_type> dist(p, r); 
+   
+    // swap between a random position and the last element
+    swap(V[dist(rng)], V[r]);
+    return partition(V, p, r);
+}
