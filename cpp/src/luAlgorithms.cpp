@@ -2,81 +2,9 @@
 #include <random>
 #include <string>
 #include <vector>
+#include "luAlgorithms.h"
 
 using namespace std;
-
-void print_vector(vector<int>& V);
-
-void selection_sort(vector<int>& V);
-
-void insertion_sort(vector<int>& V);
-
-void merge(vector<int>& V, vector<int>& V1, vector<int>& V2);
-void merge_sort(vector<int>& V);
-
-void quick_sort(vector<int>& V, const string pivot_choice);
-
-void quick_sort(vector<int>& V, const unsigned p, const unsigned r);
-void randomized_quick_sort(vector<int>& V, const unsigned p, const unsigned r);
-void median3_quick_sort(vector<int>& V, const unsigned p, const unsigned r);
-
-const unsigned partition(vector<int>& V, const unsigned p, const unsigned r);
-const unsigned randomized_partition(vector<int>& V, const unsigned p, const unsigned r);
-const unsigned median3_partition(vector<int>& V, const unsigned p, const unsigned r);
-
-int main(){
-    vector<int> V {1,4,3,5,3,5,6,6,74,7,5,-3};
-    cout << "arranjo V = ";
-    print_vector(V);
-    cout << endl;
-
-    cout << "arranjo V ordenado com o selection_sort = ";
-    selection_sort(V);
-    print_vector(V);
-    cout << endl;
-
-
-    vector<int> V2 {1,4,3,5,3,5,6,6,74,7,5,-3};
-    cout << "arranjo V2 = ";
-    print_vector(V2);
-    cout << endl;
-    
-    cout << "arranjo V2 ordenado com o insertion_sort = ";
-    insertion_sort(V2);
-    print_vector(V2);
-    cout << endl;
-    
-
-    vector<int> V3 {1,4,3,5,3,5,6,6,74,7,5,-3};
-    cout << "arranjo V3 = ";
-    print_vector(V3);
-    cout << endl;
-    
-    cout << "arranjo V3 ordenado com o merge_sort = ";
-    merge_sort(V3);
-    print_vector(V3);
-    cout << endl;
-
-    vector<int> V4 {1,4,3,5,3,5,6,6,74,7,5,-3};
-    cout << "arranjo V4 = ";
-    print_vector(V4);
-    cout << endl;
-    
-    cout << "arranjo V4 ordenado com o quick_sort = ";
-    quick_sort(V3, "median3");
-    print_vector(V3);
-    cout << endl;
-
-    return 0;
-}
-
-void print_vector(vector<int>& V) {
-    cout << "[";
-    for(unsigned i=0; i<V.size(); i++) {
-        cout << " " << V[i] << " ";
-    }
-    cout << "]";
-}
 
 void selection_sort(vector<int>& V){
     for(unsigned i=0; i<V.size() - 1; i++) {
@@ -207,4 +135,38 @@ const unsigned median3_partition(vector<int>& V, const unsigned p, const unsigne
     }
     return partition(V, p, r);
 }
-            
+           
+void merge_insertion_sort(vector<int>& V, unsigned k) {
+    if(V.size() <= k) {
+        insertion_sort(V);
+    }
+    else {
+        vector<int> V1, V2;
+        unsigned n = V.size();
+        for(unsigned i=0; i<n; i++) {
+            if(i < n/2) V1.push_back(V[i]);
+            else V2.push_back(V[i]);
+        }
+        merge_insertion_sort(V1);
+        merge_insertion_sort(V2);
+
+        V.clear();
+        merge(V, V1, V2);
+    }
+}
+
+const int binary_search(vector<int>& V, const int value) {
+    return binary_search(V, 0, V.size() - 1, value); 
+}
+
+const int binary_search(vector<int>& V, const unsigned p, const unsigned r, const int value) {
+    unsigned q = (r - p) /2;
+    if(V[q] == value) return q;
+    else if(V[q] > value) {
+        binary_search(V, q + 1, r, value);
+    }
+    else if(V[q] < value) {
+        binary_search(V, p, q - 1, value);
+    }
+    return -1;
+}

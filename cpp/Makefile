@@ -1,7 +1,7 @@
-all: comparison_algorithms
+all: main
 
-comparison_algorithms: comparison_algorithms.cpp
-	g++ -O1 -Wall -Werror -o comparison_algorithms comparison_algorithms.cpp
+main: src/main.cpp
+	g++ -O1 -Wall -o main src/main.cpp src/luAlgorithms.cpp src/utils.cpp
 
 clear:
-	rm comparison_algorithms
+	rm main
