@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <limits>
 #include <vector>
 #include "utils.h"
 #include "luAlgorithms.h"
@@ -22,6 +23,7 @@ enum SORT_CMD {
 
 void print_options() {
     cerr << "OPCOES:\n";
+    cerr << "-1: sair\n";
     cerr << "1: criar um vetor\n";
     cerr << "2: selecionar um vetor\n";
     cerr << "3: digitar os valores de um vetor criado\n";
@@ -44,7 +46,7 @@ void print_sort_options() {
 
 void print_search_options() {
     cerr << "OPCOES DE BUSCA\n";
-    cerr << "binary\n";
+    cerr << "1: binary\n";
 }
 
 void print_selected_vector(vector<vector<int>>& vectors, int32_t selectedVector) {
@@ -74,10 +76,11 @@ void type_values(vector<vector<int>>& vectors, int32_t selectedVector) {
         cerr << "nenhum vetor selecionado.\n";
     }
     else {
-        int prov;
-        cerr << "va digitando inteiros para adicionados no vetor.\n";
-        cerr << "para encerrar digite uma char ou string.\n";
-        while(cin) {
+        int prov, n;
+        cerr << "digite o tamanho do vetor: ";
+        cin >> n;
+        for(unsigned i=0; i<n; i++) {
+            cerr << "elemento " << i + 1 << ": ";
             cin >> prov;
             vectors[selectedVector].push_back(prov);
         }
@@ -102,39 +105,44 @@ int32_t select_vector(vector<vector<int>>& vectors) {
 }
 
 void sort_vector(vector<vector<int>>& vectors, int32_t selectedVector, int32_t SORT_CMD) {
-    switch(SORT_CMD) {
-        case INSERTION:
-            insertion_sort(vectors[selectedVector]);
-            break;
+    if(selectedVector != -1) {
+        cout << "metodo " << SORT_CMD << " selecionado!" << endl;
+        switch(SORT_CMD) {
+            case INSERTION:
+                insertion_sort(vectors[selectedVector]);
+                break;
 
-        case SELECTION:
-            selection_sort(vectors[selectedVector]);
-            break;
+            case SELECTION:
+                selection_sort(vectors[selectedVector]);
+                break;
 
-        case MERGE:
-            merge_sort(vectors[selectedVector]);
-            break; 
+            case MERGE:
+                merge_sort(vectors[selectedVector]);
+                break; 
 
-        case MERGE_INSERTION:
-            merge_insertion_sort(vectors[selectedVector]);
-            break;
+            case MERGE_INSERTION:
+                merge_insertion_sort(vectors[selectedVector]);
+                break;
 
-        case QUICK:
-            quick_sort(vectors[selectedVector], "last");
-            break;
+            case QUICK:
+                quick_sort(vectors[selectedVector], "last");
+                break;
 
-        case QUICK_RAND:
-            quick_sort(vectors[selectedVector], "random");
-            break;
+            case QUICK_RAND:
+                quick_sort(vectors[selectedVector], "random");
+                break;
 
-        case QUICK_MED3:
-            quick_sort(vectors[selectedVector], "median3");
-            break;
-    
-        default:
-            cerr << "metodo invalido\n";
-            break;
+            case QUICK_MED3:
+                quick_sort(vectors[selectedVector], "median3");
+                break;
+        
+            default:
+                cerr << "metodo invalido\n";
+                break;
+        }
+        print_selected_vector(vectors, selectedVector);
     }
+    else cerr << "vetor invalido.\n";
 }
 
 void search_value(vector<vector<int>>& vectors, int32_t selectedVector, int value, int32_t SEARCH_CMD) {

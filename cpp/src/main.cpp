@@ -1,4 +1,6 @@
 #include <iostream>
+#include <string>
+#include <limits>
 #include "luAlgorithms.h"
 #include "utils.h"
 
@@ -40,6 +42,7 @@ int main(){
 
             case TYPE_VALUES:
                 type_values(vectors, selectedVector);
+                selectedVector = -1;
                 break;
 
             case SHOW_SELECTED_VECTOR:
@@ -63,7 +66,7 @@ int main(){
                 cin >> value;
                 cerr << "digite o metodo de busca: ";
                 cin >> metodo_busca;
-                search_value(vectors, selectedVector, value, metodo_busca);
+                search_value(vectors, selectedVector, value, metodo_busca); 
                 break;
             
             default:
