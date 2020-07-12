@@ -1,5 +1,5 @@
 from copy import copy
-from luAlgorithm import binary_search, merge_sort, selection_sort, insertion_sort, recursive_insertion_sort, match_sum, merge, quick_sort
+from luAlgorithm import binary_search, merge_sort, selection_sort, insertion_sort, recursive_insertion_sort, match_sum, merge, quick_sort, counting_sort
 
 k = 6
 
@@ -43,6 +43,11 @@ A = [1,4,3,56,7,34,3,6,2,3,5,11]
 print("A: ", A)
 quick_sort(A, 0, len(A) - 1)
 print("A sorted with quick_sort: ", A, end="\n\n")
+
+A = [1,4,3,56,7,34,3,6,2,3,5,11]
+print("A: ", A)
+A = copy(counting_sort(A, max(A)))
+print("A sorted with counting_sort: ", A, end="\n\n")
 
 print("A: ", A)
 i = binary_search(A, 0, len(A) - 1, 6)
