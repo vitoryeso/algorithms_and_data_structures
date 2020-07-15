@@ -170,3 +170,13 @@ const int binary_search(vector<int>& V, const unsigned p, const unsigned r, cons
     }
     return -1;
 }
+
+void counting_sort(vector<int>& V, const int k) {
+    vector<int> prov(k + 1, 0), prov2(V);
+    for(unsigned i=0; i<V.size(); i++) prov[V[i]]++;
+    for(unsigned i=1; i<prov.size(); i++) prov[i] += prov[i - 1];
+    for(unsigned i=V.size(); i>0; i--) {
+        V[prov[prov2[i - 1]] - 1] = prov2[i - 1];
+        prov[prov2[i - 1]]--;
+    }
+}

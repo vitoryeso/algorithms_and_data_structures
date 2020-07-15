@@ -18,7 +18,8 @@ enum SORT_CMD {
     MERGE_INSERTION,
     QUICK,
     QUICK_RAND,
-    QUICK_MED3
+    QUICK_MED3,
+    COUNTING
 };
 
 void print_options() {
@@ -42,6 +43,7 @@ void print_sort_options() {
     cerr << "5: quick\n";
     cerr << "6: quick aleatorio\n";
     cerr << "7: quick mediana de 3 elementos\n";
+    cerr << "8: counting sort\n";
 }
 
 void print_search_options() {
@@ -136,6 +138,10 @@ void sort_vector(vector<vector<int>>& vectors, int32_t selectedVector, int32_t S
                 quick_sort(vectors[selectedVector], "median3");
                 break;
         
+            case COUNTING:
+                counting_sort(vectors[selectedVector], 100);
+                break;
+
             default:
                 cerr << "metodo invalido\n";
                 break;

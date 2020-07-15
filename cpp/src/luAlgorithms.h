@@ -24,6 +24,10 @@ const unsigned partition(vector<int>& V, const unsigned p, const unsigned r);
 const unsigned randomized_partition(vector<int>& V, const unsigned p, const unsigned r);
 const unsigned median3_partition(vector<int>& V, const unsigned p, const unsigned r);
 
+void counting_sort(vector<int>& V, const int k);
+
+void bucket_sort(vector<int>& V, const unsigned n_buckets, const int k);
+
 const int binary_search(vector<int>& V, const int value);
 const int binary_search(vector<int>& V, const unsigned p, const unsigned r, const int value);
 
