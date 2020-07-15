@@ -1,4 +1,5 @@
 #include <iostream>
+#include <math.h>
 #include <random>
 #include <string>
 #include <vector>
@@ -173,10 +174,27 @@ const int binary_search(vector<int>& V, const unsigned p, const unsigned r, cons
 
 void counting_sort(vector<int>& V, const int k) {
     vector<int> prov(k + 1, 0), prov2(V);
-    for(unsigned i=0; i<V.size(); i++) prov[V[i]]++;
+    for(unsigned i=0; i<V.size(); i++) prov[V.at(i)]++;
     for(unsigned i=1; i<prov.size(); i++) prov[i] += prov[i - 1];
-    for(unsigned i=V.size(); i>0; i--) {
-        V[prov[prov2[i - 1]] - 1] = prov2[i - 1];
-        prov[prov2[i - 1]]--;
+    for(int i=V.size() - 1; i>=0; i--) {
+        V[prov.at(prov2.at(i)) - 1] = prov2[i];
+        prov[prov2.at(i)]--;
     }
+}
+
+void bucket_sort(vector<int>& V, const int k, const unsigned n_buckets) {
+	vector<vector<int>> buckets(n_buckets);
+	unsigned j, prov( (float)k / n_buckets);
+	for(unsigned i=0; i<V.size(); i++) {
+		j = floor(V[i] / prov);
+		buckets[j].push_back(V[i]);
+	}
+	for(unsigned i=0; i<n_buckets; i++) counting_sort(buckets[i], prov * (i + 1));
+	j = 0;
+	for(unsigned n=0; n<n_buckets; n++) {
+		for(unsigned i=0; i<buckets[n].size(); i++) {
+			V[j] = buckets[n].at(i);
+			j++;
+		}
+	}
 }

@@ -19,7 +19,8 @@ enum SORT_CMD {
     QUICK,
     QUICK_RAND,
     QUICK_MED3,
-    COUNTING
+    COUNTING,
+	BUCKET
 };
 
 void print_options() {
@@ -141,6 +142,10 @@ void sort_vector(vector<vector<int>>& vectors, int32_t selectedVector, int32_t S
             case COUNTING:
                 counting_sort(vectors[selectedVector], 100);
                 break;
+			
+			case BUCKET:
+				bucket_sort(vectors[selectedVector], 6, 100);
+				break;
 
             default:
                 cerr << "metodo invalido\n";
