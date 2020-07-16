@@ -45,6 +45,7 @@ void print_sort_options() {
     cerr << "6: quick aleatorio\n";
     cerr << "7: quick mediana de 3 elementos\n";
     cerr << "8: counting sort\n";
+	cerr << "9: bucket sort\n";
 }
 
 void print_search_options() {
@@ -144,7 +145,7 @@ void sort_vector(vector<vector<int>>& vectors, int32_t selectedVector, int32_t S
                 break;
 			
 			case BUCKET:
-				bucket_sort(vectors[selectedVector], 6, 100);
+				bucket_sort(vectors[selectedVector], 100, 6);
 				break;
 
             default:

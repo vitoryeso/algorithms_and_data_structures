@@ -184,16 +184,17 @@ void counting_sort(vector<int>& V, const int k) {
 
 void bucket_sort(vector<int>& V, const int k, const unsigned n_buckets) {
 	vector<vector<int>> buckets(n_buckets);
-	unsigned j, prov( (float)k / n_buckets);
+	unsigned j;
+	float prov( (float)k / n_buckets);
 	for(unsigned i=0; i<V.size(); i++) {
 		j = floor(V[i] / prov);
 		buckets[j].push_back(V[i]);
 	}
-	for(unsigned i=0; i<n_buckets; i++) counting_sort(buckets[i], prov * (i + 1));
+	for(unsigned i=0; i<n_buckets; i++) counting_sort(buckets[i], ceil(prov * (i + 1)));
 	j = 0;
-	for(unsigned n=0; n<n_buckets; n++) {
-		for(unsigned i=0; i<buckets[n].size(); i++) {
-			V[j] = buckets[n].at(i);
+	for(unsigned i=0; i<n_buckets; i++) {
+		for(unsigned n=0; n<buckets[i].size(); n++) {
+			V[j] = buckets[i].at(n);
 			j++;
 		}
 	}
