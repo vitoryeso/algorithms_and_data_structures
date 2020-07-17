@@ -182,6 +182,13 @@ void counting_sort(vector<int>& V, const int k) {
     }
 }
 
+void counting_sort(vector<int>& V) {
+     cerr << "digite o valor k(valor maximo pros elementos do vetor): ";
+     int k;
+     cin >> k;
+     counting_sort(V, k);
+}
+
 void bucket_sort(vector<int>& V, const int k, const unsigned n_buckets) {
 	vector<vector<int>> buckets(n_buckets);
 	unsigned j;
@@ -198,6 +205,17 @@ void bucket_sort(vector<int>& V, const int k, const unsigned n_buckets) {
 			j++;
 		}
 	}
+}
+
+void bucket_sort(vector<int>& V) {
+    cerr << "digite o valor k(valor maximo pros elementos do vetor): ";
+    int k;
+    cin >> k;
+    cerr << "digite o numero de buckets(baldes): ";
+    unsigned n_buckets;
+    cin >> n_buckets; 
+    if(n_buckets >= k) counting_sort(V, k);
+    else bucket_sort(V, k, n_buckets);
 }
 
 vector<int> counting_sort_pairs(vector<pair<int, int>>& V, const int k) {
@@ -231,5 +249,15 @@ void radix_sort(vector<int>& V, const int base, const unsigned d) {
         prov2 = counting_sort_pairs(prov1, base);
     } 
     V = prov2;
+}
+
+void radix_sort(vector<int>& V) {
+     cerr << "digite a base dos inteiros do arranjo(ex: 10): ";
+     int base;
+     cin >> base;
+     cerr << "digite a quantidade maxima de digitos dos numeros: ";
+     unsigned d;
+     cin >> d;
+     radix_sort(V, base, d);
 }
 

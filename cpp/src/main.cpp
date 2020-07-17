@@ -42,7 +42,6 @@ int main(){
 
             case TYPE_VALUES:
                 type_values(vectors, selectedVector);
-                selectedVector = -1;
                 break;
 
             case SHOW_SELECTED_VECTOR:

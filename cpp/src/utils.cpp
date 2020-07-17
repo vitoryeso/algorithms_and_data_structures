@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <limits>
+#include <sstream>
+#include <iterator>
 #include <vector>
 #include "utils.h"
 #include "luAlgorithms.h"
@@ -60,11 +62,15 @@ void print_selected_vector(vector<vector<int>>& vectors, int32_t selectedVector)
         cerr << "nenhum vetor selecionado.\n";    
     }
     else {
-        cout << "vetor " << selectedVector << ": [ ";
-        for(unsigned i=0; i<vectors[selectedVector].size(); i++) {
-            cout << vectors[selectedVector][i] << " ";
+        int prov = vectors[selectedVector].size();
+        if(prov > 0) {
+            cout << "vetor " << selectedVector << ": [";
+            for(unsigned i=0; i<prov - 1; i++) {
+                cout << vectors[selectedVector][i] << " ";
+            }
+            cout << vectors[selectedVector][prov - 1] << "]\n";
         }
-        cout << "]\n";
+        else cout << "vetor " << selectedVector << ": []\n";
     }
 }
 
@@ -82,16 +88,29 @@ void type_values(vector<vector<int>>& vectors, int32_t selectedVector) {
         cerr << "nenhum vetor selecionado.\n";
     }
     else {
-        int prov, n;
-        cerr << "digite o tamanho do vetor: ";
-        cin >> n;
-        for(unsigned i=0; i<n; i++) {
-            cerr << "elemento " << i + 1 << ": ";
-            cin >> prov;
-            vectors[selectedVector].push_back(prov);
+        string vetor;
+        cin.ignore();
+        while(1) {
+            vetor = "";
+            cout << "digite o vetor como no exemplo-> vetor 2: [10 23 12 100]\nvetor " << selectedVector << ": ";
+            getline(cin, vetor); 
+            if(vetor[0] != '[' || vetor[vetor.length() - 1] != ']') {
+                cout << "formato incorreto.\n";
+                continue;
+            }
+            else {
+                istringstream prov(vetor);
+                vector<string> splitted_vector( (istream_iterator<string>{prov}), istream_iterator<string>() );
+                splitted_vector[0].erase(0, 1);
+                splitted_vector[splitted_vector.size() - 1].pop_back();
+                for(unsigned i=0; i<splitted_vector.size(); i++) {
+                    vectors[selectedVector].push_back(stoi(splitted_vector[i]));
+                }
+                cerr << "o vetor foi adicionado.\n";
+                print_selected_vector(vectors, selectedVector);
+                break;
+            }
         }
-        cerr << "o vetor foi adicionado.\n";
-        print_selected_vector(vectors, selectedVector);
     }     
 }
 
@@ -143,15 +162,15 @@ void sort_vector(vector<vector<int>>& vectors, int32_t selectedVector, int32_t S
                 break;
         
             case COUNTING:
-                counting_sort(vectors[selectedVector], 100);
+                counting_sort(vectors[selectedVector]);
                 break;
 			
 			case BUCKET:
-				bucket_sort(vectors[selectedVector], 100, 6);
+				bucket_sort(vectors[selectedVector]);
 				break;
 
             case RADIX:
-                radix_sort(vectors[selectedVector], 10, 3);
+                radix_sort(vectors[selectedVector]);
                 break;
 
             default:
