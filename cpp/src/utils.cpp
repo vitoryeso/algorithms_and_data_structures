@@ -20,7 +20,8 @@ enum SORT_CMD {
     QUICK_RAND,
     QUICK_MED3,
     COUNTING,
-	BUCKET
+	BUCKET,
+    RADIX
 };
 
 void print_options() {
@@ -46,6 +47,7 @@ void print_sort_options() {
     cerr << "7: quick mediana de 3 elementos\n";
     cerr << "8: counting sort\n";
 	cerr << "9: bucket sort\n";
+    cerr << "10: radix sort\n";
 }
 
 void print_search_options() {
@@ -147,6 +149,10 @@ void sort_vector(vector<vector<int>>& vectors, int32_t selectedVector, int32_t S
 			case BUCKET:
 				bucket_sort(vectors[selectedVector], 100, 6);
 				break;
+
+            case RADIX:
+                radix_sort(vectors[selectedVector], 10, 3);
+                break;
 
             default:
                 cerr << "metodo invalido\n";

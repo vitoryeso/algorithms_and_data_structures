@@ -175,7 +175,7 @@ const int binary_search(vector<int>& V, const unsigned p, const unsigned r, cons
 void counting_sort(vector<int>& V, const int k) {
     vector<int> prov(k + 1, 0), prov2(V);
     for(unsigned i=0; i<V.size(); i++) prov[V.at(i)]++;
-    for(unsigned i=1; i<prov.size(); i++) prov[i] += prov[i - 1];
+    for(unsigned i=1; i<k + 1; i++) prov[i] += prov[i - 1];
     for(int i=V.size() - 1; i>=0; i--) {
         V[prov.at(prov2.at(i)) - 1] = prov2[i];
         prov[prov2.at(i)]--;
@@ -199,3 +199,37 @@ void bucket_sort(vector<int>& V, const int k, const unsigned n_buckets) {
 		}
 	}
 }
+
+vector<int> counting_sort_pairs(vector<pair<int, int>>& V, const int k) {
+    vector<int> prov1(k + 1, 0), prov3(V.size()); 
+    vector<pair<int, int>> prov2(V);
+    for(unsigned i=0; i<V.size(); i++) prov1[prov2[i].first]++;
+    for(unsigned i=1; i<k + 1; i++) prov1[i] += prov1[i - 1]; 
+    for(int i=V.size() - 1; i>=0; i--) {
+        prov3[prov1.at(prov2.at(i).first) - 1] = prov2[i].second;
+        prov1[prov2.at(i).first]--; 
+    }
+    return prov3;
+}
+
+vector<pair<int, int>> get_pairs(vector<int>& V, const unsigned base,  const unsigned d) {
+    vector<pair<int, int>> prov;
+    unsigned digit;
+    for(unsigned i=0; i<V.size(); i++) {
+        digit = (long int) (V[i] / pow(base, d)) % base; 
+        prov.push_back(make_pair(digit, V[i]));
+    }
+    return prov; 
+} 
+
+void radix_sort(vector<int>& V, const int base, const unsigned d) {
+    vector<pair<int, int>> prov1;
+    vector<int> prov2(V);
+    for(unsigned i=0; i<d; i++) {
+        prov1 = get_pairs(prov2, base, i);
+        //some stable method
+        prov2 = counting_sort_pairs(prov1, base);
+    } 
+    V = prov2;
+}
+
