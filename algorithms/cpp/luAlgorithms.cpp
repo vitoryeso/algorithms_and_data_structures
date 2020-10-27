@@ -161,23 +161,30 @@ const int binary_search(vector<int>& V, const int value) {
 }
 
 const int binary_search(vector<int>& V, const unsigned p, const unsigned r, const int value) {
-  int q = floor((r - p)/2) + p;
-  cout << "q: " << q << endl;
-  cout << "V[q]: " << V[q] << endl;
-  if(V[q] == value) return q;
-  else if(V[q] > value){ 
-    return binary_search(V, p, q-1, value);
+  if(r-p == 0) {
+    if(V[p] == value) return p;
+    else return -1;
+  }
+  if(r-p < 0) {
+    return -1;
   }
   else {
-    return binary_search(V, q, r, value);
+    int q = floor((r - p)/2) + p;
+    if(V[q] == value) return q;
+    else if(V[q] > value){ 
+      return binary_search(V, p, q-1, value);
+    }
+    else if(V[q] < value) {
+      return binary_search(V, q+1, r, value);
+    }
+    return -1;
   }
-  return -1;
 }
 
 void counting_sort(vector<int>& V, const int k) {
     vector<int> prov(k + 1, 0), prov2(V);
     for(unsigned i=0; i<V.size(); i++) prov[V.at(i)]++;
-    for(unsigned i=1; i<k + 1; i++) prov[i] += prov[i - 1];
+    for(unsigned i=1; i<(unsigned)k + 1; i++) prov[i] += prov[i - 1];
     for(int i=V.size() - 1; i>=0; i--) {
         V[prov.at(prov2.at(i)) - 1] = prov2[i];
         prov[prov2.at(i)]--;
@@ -216,7 +223,7 @@ void bucket_sort(vector<int>& V) {
     cerr << "digite o numero de buckets(baldes): ";
     unsigned n_buckets;
     cin >> n_buckets; 
-    if(n_buckets >= k) counting_sort(V, k);
+    if(n_buckets >= (unsigned)k) counting_sort(V, k);
     else bucket_sort(V, k, n_buckets);
 }
 
@@ -224,7 +231,7 @@ vector<int> counting_sort_pairs(vector<pair<int, int>>& V, const int k) {
     vector<int> prov1(k + 1, 0), prov3(V.size()); 
     vector<pair<int, int>> prov2(V);
     for(unsigned i=0; i<V.size(); i++) prov1[prov2[i].first]++;
-    for(unsigned i=1; i<k + 1; i++) prov1[i] += prov1[i - 1]; 
+    for(unsigned i=1; i<(unsigned)k + 1; i++) prov1[i] += prov1[i - 1]; 
     for(int i=V.size() - 1; i>=0; i--) {
         prov3[prov1.at(prov2.at(i).first) - 1] = prov2[i].second;
         prov1[prov2.at(i).first]--; 

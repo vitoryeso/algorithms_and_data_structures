@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string>
 #include <limits>
-#include "luAlgorithms.h"
-#include "utils.h"
+#include "./algorithms/cpp/luAlgorithms.h"
+#include "./utils/utils.h"
 
 using namespace std;
 

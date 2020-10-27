@@ -5,7 +5,7 @@
 #include <iterator>
 #include <vector>
 #include "utils.h"
-#include "luAlgorithms.h"
+#include "../algorithms/cpp/luAlgorithms.h"
 
 using namespace std;
 
@@ -64,13 +64,13 @@ void print_selected_vector(vector<vector<int>>& vectors, int32_t selectedVector)
     else {
         int prov = vectors[selectedVector].size();
         if(prov > 0) {
-            cout << "vetor " << selectedVector << ": [";
-            for(unsigned i=0; i<prov - 1; i++) {
+            cout << "vetor " << selectedVector + 1 << ": [";
+            for(unsigned i=0; i<(unsigned)prov - 1; i++) {
                 cout << vectors[selectedVector][i] << " ";
             }
             cout << vectors[selectedVector][prov - 1] << "]\n";
         }
-        else cout << "vetor " << selectedVector << ": []\n";
+        else cout << "vetor " << selectedVector + 1 << ": []\n";
     }
 }
 
@@ -92,7 +92,7 @@ void type_values(vector<vector<int>>& vectors, int32_t selectedVector) {
         cin.ignore();
         while(1) {
             vetor = "";
-            cout << "digite o vetor como no exemplo-> vetor 2: [10 23 12 100]\nvetor " << selectedVector << ": ";
+            cout << "digite o vetor como no exemplo-> vetor 2: [10 23 12 100]\nvetor " << selectedVector + 1 << ": ";
             getline(cin, vetor); 
             if(vetor[0] != '[' || vetor[vetor.length() - 1] != ']') {
                 cout << "formato incorreto.\n";
@@ -119,7 +119,7 @@ int32_t select_vector(vector<vector<int>>& vectors) {
     cerr << "digite o numero do vetor que deseja selecionar: ";
     int32_t prov;
     cin >> prov;
-    if(prov > vectors.size() || prov < 1) {
+    if(prov > (int32_t)vectors.size() || prov < 1) {
         cerr << "numero invalido.\n";
         return -1; 
     }

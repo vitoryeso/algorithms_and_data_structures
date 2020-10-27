@@ -1,5 +1,5 @@
 from copy import copy
-from luAlgorithm import binary_search, merge_sort, selection_sort, insertion_sort, recursive_insertion_sort, match_sum, merge, quick_sort, counting_sort
+from algorithms.python import binary_search, merge_sort, selection_sort, insertion_sort, recursive_insertion_sort, match_sum, merge, quick_sort, counting_sort
 
 k = 6
 
