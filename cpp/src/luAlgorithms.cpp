@@ -157,19 +157,21 @@ void merge_insertion_sort(vector<int>& V, unsigned k) {
 }
 
 const int binary_search(vector<int>& V, const int value) {
-    return binary_search(V, 0, V.size() - 1, value); 
+    return binary_search(V, 0, V.size(), value); 
 }
 
 const int binary_search(vector<int>& V, const unsigned p, const unsigned r, const int value) {
-    unsigned q = (r - p) /2;
-    if(V[q] == value) return q;
-    else if(V[q] > value) {
-        binary_search(V, q + 1, r, value);
-    }
-    else if(V[q] < value) {
-        binary_search(V, p, q - 1, value);
-    }
-    return -1;
+  int q = floor((r - p)/2) + p;
+  cout << "q: " << q << endl;
+  cout << "V[q]: " << V[q] << endl;
+  if(V[q] == value) return q;
+  else if(V[q] > value){ 
+    return binary_search(V, p, q-1, value);
+  }
+  else {
+    return binary_search(V, q, r, value);
+  }
+  return -1;
 }
 
 void counting_sort(vector<int>& V, const int k) {
