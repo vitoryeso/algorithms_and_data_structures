@@ -12,6 +12,10 @@ int main(void) {
   
   V.print_vector();
 
+  for(unsigned i=0; i<100; i++) V.push_back(99);
+    
+  V.print_vector();
+
   std::cout << "U[3] = " << U[3] << std::endl;
 
   return 0;

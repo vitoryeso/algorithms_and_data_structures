@@ -7,13 +7,37 @@ void vector::copy(const vector& V) {
 
 void vector::alloc(const unsigned size) {
   if(size == 0) return;
-  else start = new int[size]; 
+  else start = new int[size + 10]; 
   this->size = size;
+  this->extend = 10;
 }
 
 void vector::del() {
   delete []start;
   size = 0;
+}
+
+void vector::push_back(int value) {
+  if(extend > 0) {
+    start[size] = value;
+    size++;
+    extend--; 
+  }
+  else {
+    vector prov_vector(start, size);
+    alloc(prov_vector.length());
+    copy(prov_vector);
+    start[size] = value;
+    size++;
+    extend--; 
+  }
+}
+
+void vector::pop_back() {
+  if(size > 0) {
+    size--;
+    extend++;
+  }
 }
 
 vector::vector(const vector& V) {
