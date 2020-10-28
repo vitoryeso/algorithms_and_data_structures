@@ -6,15 +6,12 @@ private:
 
   /* just copy the parameter vector to this vector. assume which the memory already been allocated. */
   void copy(const vector &V);
-
-  /* alloc space for the vector. assume a void vector */
-  void alloc(const unsigned size);
-
+/* alloc space for the vector. assume a void vector */ void alloc(const unsigned size);
   /* delete the memory allocated by the vector */
   void del();
 
 public:
-  vector(): start(nullptr), size(0) {}
+  vector(): start(nullptr), size(0), extend(10) {}
 
   /* init a vector with the same value */
   vector(const unsigned size, const int value);

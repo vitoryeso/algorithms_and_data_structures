@@ -1,7 +1,17 @@
 #include <iostream>
-#include "data_structures/cpp/vector.h"
+#include "data_structures/cpp/queue.h"
 
 int main(void) {
+  queue Q(5);
+  Q.enqueue(1);
+  Q.enqueue(2);
+  Q.enqueue(3);
+  Q.enqueue(4);
+  std::cout << Q.dequeue() << std::endl;
+  std::cout << Q.dequeue() << std::endl;
+  std::cout << Q.dequeue() << std::endl;
+  std::cout << Q.dequeue() << std::endl;
+
   vector V(10), U(10, 222);
   V.print_vector();
   U.print_vector();

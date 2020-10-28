@@ -18,6 +18,11 @@ void vector::del() {
 }
 
 void vector::push_back(int value) {
+  if(size == 0) {
+    alloc(1);
+    start[0] = value;
+    return;
+  }
   if(extend > 0) {
     start[size] = value;
     size++;
