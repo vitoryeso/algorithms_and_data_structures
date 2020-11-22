@@ -32,46 +32,61 @@ void insertion_sort(vector<int>& V){
     }
 }
 
-void merge(vector<int>& V, vector<int>& V1, vector<int>& V2){
-    unsigned n1, n2, i, j;
-    n1 = V1.size();
-    n2 = V2.size();
-    i = j = 0;
-    while(i<n1 && j<n2){
-        if(V1[i] <= V2[j]) {
-            V.push_back(V1[i]);
-            i++;
-        }
-        else {
-            V.push_back(V2[j]);
-            j++;
-        }
-    }
-    if(n1 == i) {
-        for(unsigned j2=j; j2<n2; j2++) {
-            V.push_back(V2[j2]);
-        }
-    }
-    else {
-        for(unsigned i2=i; i2<n1; i2++) {
-            V.push_back(V1[i2]);
-        }
-    }
+void quick_sort(vector<int>& V) {
+  quick_sort(V, "last");
 }
 
-void merge_sort(vector<int>& V){
-    unsigned n = V.size();
-    if (n <= 1) return; 
-    vector<int> V1, V2;
-    for(unsigned i=0; i<n; i++) {
-        if(i < n/2) V1.push_back(V[i]);
-        else V2.push_back(V[i]);
-    }
-    merge_sort(V1);
-    merge_sort(V2);
+void merge(vector<int>& V, int p,int q,int r) {
+  int n1 = q - p + 1;
+  int n2 = r - q;
+  int V1[n1], V2[n2];
+  for(int i=0; i<n1; i++)
+    V1[i] = V[p + i];
 
-    V.clear();
-    merge(V, V1, V2);
+  for(int i=0; i<n2; i++)
+    V2[i] = V[i + q + 1];
+
+  int i = 0, j = 0;
+  int v_idx = p;
+
+  while(i<n1 && j<n2){
+      if(V1[i] <= V2[j]) {
+          V[v_idx] = V1[i];
+          i++;
+      }
+      else {
+          V[v_idx] = V2[j];
+          j++;
+      }
+      v_idx++;
+  }
+  if(n1 == i) {
+      for(int j2=j; j2<n2; j2++) {
+          V[v_idx] = V2[j2];
+          v_idx++;
+      }
+  }
+  else {
+      for(int i2=i; i2<n1; i2++) {
+          V[v_idx] = V1[i2];
+          v_idx++;
+      }
+  }
+}
+
+void merge_sort(vector<int>& V, int p, int r) {
+  if(p>=r){
+    return;//returns recursively
+  }
+
+  int m = (p+r-1)/2;
+  merge_sort(V ,p,m);
+  merge_sort(V ,m+1,r);
+  merge(V ,p,m,r);
+}
+
+void merge_sort(vector<int>& V) {
+  merge_sort(V, 0, V.size() - 1);
 }
 
 void quick_sort(vector<int>& V, const string pivot_choice) {
@@ -81,25 +96,26 @@ void quick_sort(vector<int>& V, const string pivot_choice) {
         else randomized_quick_sort(V, 0, V.size() - 1);
 }
 
-void quick_sort(vector<int>& V, const unsigned p, const unsigned r) {
+void quick_sort(vector<int>& V, int p, int r) {
     if(r > p) {
-        const unsigned q = partition(V, p, r);
+        int q = partition(V, p, r);
         quick_sort(V, p, q - 1);
         quick_sort(V, q + 1, r);
     }
 }
 
-const unsigned partition(vector<int>& V, const unsigned p, const unsigned r) {
+int partition(vector<int>& V, int p, int r) {
     // pivot = V[r]
     int i = p - 1;
-    for(unsigned j=p; j<r; j++) {
+    for(int j=p; j<r; j++) {
         if(V[j] < V[r]) {
-            swap(V[i + 1], V[j]);
             i++;
+            swap(V[i], V[j]);
         }
     }
-    swap(V[i + 1], V[r]);
-    return i + 1;
+    i++;
+    swap(V[i], V[r]);
+    return i;
 }
 
 void randomized_quick_sort(vector<int>& V, const unsigned p, const unsigned r) {
@@ -137,25 +153,6 @@ const unsigned median3_partition(vector<int>& V, const unsigned p, const unsigne
     return partition(V, p, r);
 }
            
-void merge_insertion_sort(vector<int>& V, unsigned k) {
-    if(V.size() <= k) {
-        insertion_sort(V);
-    }
-    else {
-        vector<int> V1, V2;
-        unsigned n = V.size();
-        for(unsigned i=0; i<n; i++) {
-            if(i < n/2) V1.push_back(V[i]);
-            else V2.push_back(V[i]);
-        }
-        merge_insertion_sort(V1);
-        merge_insertion_sort(V2);
-
-        V.clear();
-        merge(V, V1, V2);
-    }
-}
-
 const int binary_search(vector<int>& V, const int value) {
     return binary_search(V, 0, V.size(), value); 
 }

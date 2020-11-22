@@ -10,17 +10,18 @@ void selection_sort(vector<int>& V);
 
 void insertion_sort(vector<int>& V);
 
-void merge(vector<int>& V, vector<int>& V1, vector<int>& V2);
+void merge(vector<int>& V, int p, int q, int r);
+void merge_sort(vector<int>& V, int p, int r);
 void merge_sort(vector<int>& V);
-void merge_insertion_sort(vector<int>& V, unsigned k=4);
 
 void quick_sort(vector<int>& V, const string pivot_choice);
+void quick_sort(vector<int>& V);
 
-void quick_sort(vector<int>& V, const unsigned p, const unsigned r);
+void quick_sort(vector<int>& V, int p, int r);
 void randomized_quick_sort(vector<int>& V, const unsigned p, const unsigned r);
 void median3_quick_sort(vector<int>& V, const unsigned p, const unsigned r);
 
-const unsigned partition(vector<int>& V, const unsigned p, const unsigned r);
+int partition(vector<int>& V, int p, int r);
 const unsigned randomized_partition(vector<int>& V, const unsigned p, const unsigned r);
 const unsigned median3_partition(vector<int>& V, const unsigned p, const unsigned r);
 
