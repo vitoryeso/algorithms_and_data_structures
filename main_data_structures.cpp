@@ -1,32 +1,23 @@
 #include <iostream>
-#include "data_structures/cpp/queue.h"
+#include "data_structures/cpp/queue_linkedlist.h"
 
 int main(void) {
-  queue Q(5);
+  queue Q;
   Q.enqueue(1);
   Q.enqueue(2);
   Q.enqueue(3);
   Q.enqueue(4);
+
+  std::cout << "Queue is empty?: " << Q.isEmpty() << std::endl;
+  std::cout << "Queue size: " << Q.size() << std::endl;
+
   std::cout << Q.dequeue() << std::endl;
   std::cout << Q.dequeue() << std::endl;
   std::cout << Q.dequeue() << std::endl;
   std::cout << Q.dequeue() << std::endl;
 
-  vector V(10), U(10, 222);
-  V.print_vector();
-  U.print_vector();
-
-  for(unsigned i=0; i<V.length(); i++) {
-    V[i] = i + 1;
-  }
-  
-  V.print_vector();
-
-  for(unsigned i=0; i<100; i++) V.push_back(99);
-    
-  V.print_vector();
-
-  std::cout << "U[3] = " << U[3] << std::endl;
+  std::cout << "Queue is empty?: " << Q.isEmpty() << std::endl;
+  std::cout << "Queue size: " << Q.size() << std::endl;
 
   return 0;
 }
