@@ -5,6 +5,14 @@ void vector::copy(const vector& V) {
   for(unsigned i=0; i<size; i++) this->start[i] = V[i];
 }
 
+void vector::operator=(const vector& V) {
+  if (this->size > 0) {
+    this->del(); 
+  }
+  this->alloc(V.length()); 
+  this->copy(V);
+}
+
 void vector::alloc(const unsigned size) {
   if(size == 0) return;
   else start = new int[size + 10]; 
@@ -46,12 +54,9 @@ void vector::pop_back() {
 }
 
 vector::vector(const vector& V) {
-  if(V.length() == 0) return;
-  if(this->size > 0) {
-    del();
-  }
-  alloc(V.length());
-  copy(V);
+  /* its a constructor. dont need to use del function */
+  this->alloc(V.length());
+  this->copy(V);
 }
 
 vector::vector(const unsigned size, const int value) {

@@ -1,23 +1,26 @@
 #include <iostream>
-#include "data_structures/cpp/queue_linkedlist.h"
+//#include "data_structures/cpp/queue_linkedlist.h"
+#include "data_structures/cpp/heap.h"
 
 int main(void) {
-  queue Q;
-  Q.enqueue(1);
-  Q.enqueue(2);
-  Q.enqueue(3);
-  Q.enqueue(4);
+  vector V;
+  V.push_back(20);
+  V.push_back(10);
+  V.push_back(1);
+  V.push_back(3);
+  V.push_back(4);
+  V.push_back(5);
+  V.push_back(3);
+  V.push_back(29);
+  V.push_back(10);
+  V.push_back(14);
 
-  std::cout << "Queue is empty?: " << Q.isEmpty() << std::endl;
-  std::cout << "Queue size: " << Q.size() << std::endl;
+  heap h(V);
 
-  std::cout << Q.dequeue() << std::endl;
-  std::cout << Q.dequeue() << std::endl;
-  std::cout << Q.dequeue() << std::endl;
-  std::cout << Q.dequeue() << std::endl;
+  h.print();
 
-  std::cout << "Queue is empty?: " << Q.isEmpty() << std::endl;
-  std::cout << "Queue size: " << Q.size() << std::endl;
+  vector sortedVec = heapSort(V);
+  sortedVec.print_vector();
 
   return 0;
 }
