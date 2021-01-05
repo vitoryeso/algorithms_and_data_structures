@@ -4,7 +4,7 @@
 #include  "data_structures/cpp/trees.h"
 
 int main(void) {
-  BST tree; 
+  augBST tree; 
   tree.insert(10);
   tree.insert(1);
   tree.insert(15);
