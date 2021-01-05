@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include "../data_structures/cpp/tree.h"
 
 using namespace std;
 
@@ -18,6 +19,8 @@ int32_t select_vector(vector<vector<int>>& vectors);
 
 void sort_vector(vector<vector<int>>& vectors, int32_t selectedVector, int32_t SORT_CMD);
 void search_value(vector<vector<int>>& vectors, int32_t selectedVector, int value, int32_t SEARCH_CMD);
+
+void print_tree(tree &T);
  
 
 #endif

@@ -1,26 +1,34 @@
 #include <iostream>
 //#include "data_structures/cpp/queue_linkedlist.h"
-#include "data_structures/cpp/heap.h"
+//#include "data_structures/cpp/heap.h"
+#include  "data_structures/cpp/trees.h"
 
 int main(void) {
-  vector V;
-  V.push_back(20);
-  V.push_back(10);
-  V.push_back(1);
-  V.push_back(3);
-  V.push_back(4);
-  V.push_back(5);
-  V.push_back(3);
-  V.push_back(29);
-  V.push_back(10);
-  V.push_back(14);
+  BST tree; 
+  tree.insert(10);
+  tree.insert(1);
+  tree.insert(15);
+  tree.insert(40);
+  tree.insert(4);
+  tree.insert(19);
+  tree.insert(61);
 
-  heap h(V);
+  std::cout << "inserting 10, 1, 15, 40, 4, 19, 61 " << std::endl;
 
-  h.print();
+  std::string prov = tree.have(15) ? "yes" : "no";
+  std::cout << "have 15 ? " << prov << std::endl;
 
-  vector sortedVec = heapSort(V);
-  sortedVec.print_vector();
+  prov = tree.have(1) ? "yes" : "no";
+  std::cout << "have 1 ? " << prov << std::endl;
+
+  prov = tree.have(18) ? "yes" : "no";
+  std::cout << "have 18 ? " << prov << std::endl;
+
+  int provint = tree.findMin();
+  std::cout << "min: " << provint << std::endl;
+
+  provint = tree.findMax();
+  std::cout << "max: " << provint << std::endl;
 
   return 0;
 }
