@@ -9,3 +9,6 @@ main_algorithms: ./main_algorithms.cpp
 
 clear:
 	rm ./bin/main_algorithms ./bin/main_data_structures ./bin/benchmark_visualizer
+
+test_all: ./tests/*.cc
+	g++ -pthread ./tests/*.cc -lgtest -lgtest_main -o ./bin/tests && ./bin/tests
