@@ -67,9 +67,30 @@ void printarr(struct str_arr* arr) {
 
 }
 
-void remove_end(struct str_arr);
-bool remove_elem(struct str_arr, unsigned i);
-bool insert_elem(struct str_arr, char* name, unsigned i);
+void remove_end(struct str_arr* arr) {
+  if (arr->len >0)
+    arr->len -= 1;
+}
+
+bool remove_elem(struct str_arr* arr, unsigned i) {
+  if (arr->len <= i) return false;
+  arr->len -= 1;
+  for (char j=i; j<arr->len; j++) {
+    arr->names[j] = arr->names[j + 1];
+  }
+  return true;
+}
+
+bool insert_elem(struct str_arr* arr, char* name, unsigned i) {
+  if (arr->len <= i) return false;
+  if (arr->len + 1 >= arr->cap) duplicate_mem(arr);
+  for (char j=arr->len - 1; j>0; j--) {
+    arr->names[j + 1] = arr->names[j];
+  }
+  arr->names[i] = name;
+  arr->len += 1;
+  return true;
+}
 
 int main() {
   struct str_arr* lu_names;
@@ -98,15 +119,38 @@ int main() {
   printf("len %d\n", lu_names->len);
 
   /* ------ */
-  append(lu_names, "yyyyyyy3so");
+  insert_elem(lu_names, "luuukkkkk", 2);
   printarr(lu_names);
   printf("cap %d\n", lu_names->cap);
   printf("len %d\n", lu_names->len);
-  append(lu_names, "yyyyyyy3so");
+  insert_elem(lu_names, "luuukkkkk", 2);
   printarr(lu_names);
   printf("cap %d\n", lu_names->cap);
   printf("len %d\n", lu_names->len);
-  append(lu_names, "yyyyyyy3so");
+  insert_elem(lu_names, "luuukkkkk", 2);
+  printarr(lu_names);
+  printf("cap %d\n", lu_names->cap);
+  printf("len %d\n", lu_names->len);
+
+  remove_end(lu_names);
+  printarr(lu_names);
+  printf("cap %d\n", lu_names->cap);
+  printf("len %d\n", lu_names->len);
+
+  remove_elem(lu_names, 4);
+  printarr(lu_names);
+  printf("cap %d\n", lu_names->cap);
+  printf("len %d\n", lu_names->len);
+  remove_elem(lu_names, 4);
+  printarr(lu_names);
+  printf("cap %d\n", lu_names->cap);
+  printf("len %d\n", lu_names->len);
+  remove_elem(lu_names, 4);
+  printarr(lu_names);
+  printf("cap %d\n", lu_names->cap);
+  printf("len %d\n", lu_names->len);
+
+  remove_elem(lu_names, 4);
   printarr(lu_names);
   printf("cap %d\n", lu_names->cap);
   printf("len %d\n", lu_names->len);

@@ -16,8 +16,8 @@ void duplicate_mem(struct str_arr* arr);
 
 void printarr(struct str_arr* arr);
 void append(struct str_arr* arr, char* name);
-void remove_end(struct str_arr);
-bool remove_elem(struct str_arr, unsigned i);
-bool insert_elem(struct str_arr, char* name, unsigned i);
+void remove_end(struct str_arr* arr);
+bool remove_elem(struct str_arr* arr, unsigned i);
+bool insert_elem(struct str_arr* arr, char* name, unsigned i);
 
 #endif
