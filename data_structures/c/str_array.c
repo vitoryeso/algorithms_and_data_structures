@@ -92,6 +92,7 @@ bool insert_elem(struct str_arr* arr, char* name, unsigned i) {
   return true;
 }
 
+/*
 int main() {
   struct str_arr* lu_names;
 
@@ -118,7 +119,6 @@ int main() {
   printf("cap %d\n", lu_names->cap);
   printf("len %d\n", lu_names->len);
 
-  /* ------ */
   insert_elem(lu_names, "luuukkkkk", 2);
   printarr(lu_names);
   printf("cap %d\n", lu_names->cap);
@@ -159,3 +159,4 @@ int main() {
 
   return 0;
 }
+*/
