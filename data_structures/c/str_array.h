@@ -9,15 +9,15 @@ struct str_arr {
   unsigned cap;
 };
 
-void free_all(struct str_arr* arr);
-void copy(struct str_arr* arr, struct str_arr* arr2);
-void allocate(struct str_arr* arr, unsigned cap);
-void duplicate_mem(struct str_arr* arr);
+void STRARRfree_all(struct str_arr* arr);
+void STRARRcopy(struct str_arr* arr, struct str_arr* arr2);
+void STRARRallocate(struct str_arr* arr, unsigned cap);
+void STRARRduplicate_mem(struct str_arr* arr);
 
-void printarr(struct str_arr* arr);
-void append(struct str_arr* arr, char* name);
-void remove_end(struct str_arr* arr);
-bool remove_elem(struct str_arr* arr, unsigned i);
-bool insert_elem(struct str_arr* arr, char* name, unsigned i);
+void STRARRprint_arr(struct str_arr* arr);
+void STRARRappend(struct str_arr* arr, char* name);
+void STRARRremove_end(struct str_arr* arr);
+bool STRARRremove_elem(struct str_arr* arr, unsigned i);
+bool STRARRinsert_elem(struct str_arr* arr, char* name, unsigned i);
 
 #endif

@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "./edge_array.h"
 
-void free_all(struct edge_arr* arr) {
+void EDGARRfree_all(struct edge_arr* arr) {
   if (arr->cap > 0) {
     free(arr->edges);
   }
@@ -12,22 +12,22 @@ void free_all(struct edge_arr* arr) {
 }
 
 /* arr => arr2 */
-void copy(struct edge_arr* arr, struct edge_arr* arr2) {
+void EDGARRcopy(struct edge_arr* arr, struct edge_arr* arr2) {
   for(char i=0; i<arr->len; i++) {
     arr2->edges[i] = arr->edges[i];
     arr2->len = arr2->len >= arr->len ? arr2->len : arr->len;
   }
 }
 
-void allocate(struct edge_arr* arr, unsigned cap) {
+void EDGARRallocate(struct edge_arr* arr, unsigned cap) {
   arr->edges = ( struct edge* ) malloc(cap * sizeof( void * ));
   arr->cap = cap;
   arr->len = 0;
 }
 
-void duplicate_mem(struct edge_arr* arr) {
+void EDGARRduplicate_mem(struct edge_arr* arr) {
   if (arr->len <= 0 || arr->cap <= 0) {
-    allocate(arr, 5);
+    EDGARRallocate(arr, 5);
     return;
   }
     
@@ -36,43 +36,43 @@ void duplicate_mem(struct edge_arr* arr) {
 
   unsigned prov_cap = arr->cap;
 
-  allocate(prov, arr->cap);
-  copy(arr, prov);
+  EDGARRallocate(prov, arr->cap);
+  EDGARRcopy(arr, prov);
 
-  free_all(arr);
+  EDGARRfree_all(arr);
 
-  allocate(arr, prov_cap * 2);
-  copy(prov, arr);
+  EDGARRallocate(arr, prov_cap * 2);
+  EDGARRcopy(prov, arr);
 }
 
-void print_edge(struct edge* E) {
+void EDGARRprint_edge(struct edge* E) {
   printf("%d => %d; peso %d\n", E->orig_id, E->dest_id, E->weight);
 }
 
-void print_arr(struct edge_arr* arr) {
+void EDGARRprint_arr(struct edge_arr* arr) {
   if (arr->len <= 0) {
     printf("array vazio!\n");
     return ;
   }
   for(char i=0; i<arr->len; i++) {
-    print_edge(&arr->edges[i]);
+    EDGARRprint_edge(&arr->edges[i]);
   }
 }
 
-void append(struct edge_arr* arr, struct edge E) {
+void EDGARRappend(struct edge_arr* arr, struct edge E) {
   if (arr->len + 1 > arr->cap) {
-    duplicate_mem(arr);
+    EDGARRduplicate_mem(arr);
   }
   arr->edges[arr->len] = E;
   arr->len += 1;
 }
 
-void remove_end(struct edge_arr* arr) {
+void EDGARRremove_end(struct edge_arr* arr) {
   if (arr->len >0)
     arr->len -= 1;
 }
 
-bool remove_elem(struct edge_arr* arr, unsigned i) {
+bool EDGARRremove_elem(struct edge_arr* arr, unsigned i) {
   if (arr->len <= i) return false;
   arr->len -= 1;
   for (char j=i; j<arr->len; j++) {
@@ -81,9 +81,9 @@ bool remove_elem(struct edge_arr* arr, unsigned i) {
   return true;
 }
 
-bool insert_elem(struct edge_arr* arr, struct edge E, unsigned i) {
+bool EDGARRinsert_elem(struct edge_arr* arr, struct edge E, unsigned i) {
   if (arr->len <= i) return false;
-  if (arr->len + 1 >= arr->cap) duplicate_mem(arr);
+  if (arr->len + 1 >= arr->cap) EDGARRduplicate_mem(arr);
   for (char j=arr->len - 1; j>0; j--) {
     arr->edges[j + 1] = arr->edges[j];
   }
@@ -109,8 +109,7 @@ int main() {
 
   append(lu_edges, *lu_edge);
   print_arr(lu_edges);
-  printf("cap %d\n", lu_edges->cap);
-  printf("len %d\n", lu_edges->len);
+  printf("cap %d\n", lu_edges->cap); printf("len %d\n", lu_edges->len);
   
   return 0;
 }

@@ -3,13 +3,13 @@
 #include <stdlib.h>
 #include "./str_array.h"
 
-void allocate(struct str_arr* arr, unsigned cap) {
+void STRARRallocate(struct str_arr* arr, unsigned cap) {
   arr->names = ( char** ) malloc(cap * sizeof( void * ));
   arr->cap = cap;
   arr->len = 0;
 }
  
-void free_all(struct str_arr* arr) {
+void STRARRfree_all(struct str_arr* arr) {
   if (arr->cap > 0) {
     free(arr->names);
   }
@@ -18,16 +18,16 @@ void free_all(struct str_arr* arr) {
 }
 
 /* arr => arr2 */
-void copy(struct str_arr* arr, struct str_arr* arr2) {
+void STRARRcopy(struct str_arr* arr, struct str_arr* arr2) {
   for(char i=0; i<arr->len; i++) {
     arr2->names[i] = arr->names[i];
     arr2->len = arr2->len >= arr->len ? arr2->len : arr->len;
   }
 }
 
-void duplicate_mem(struct str_arr* arr) {
+void STRARRduplicate_mem(struct str_arr* arr) {
   if (arr->len <= 0 || arr->cap <= 0) {
-    allocate(arr, 5);
+    STRARRallocate(arr, 5);
     return;
   }
     
@@ -36,25 +36,25 @@ void duplicate_mem(struct str_arr* arr) {
 
   unsigned prov_cap = arr->cap;
 
-  allocate(prov, arr->cap);
-  copy(arr, prov);
+  STRARRallocate(prov, arr->cap);
+  STRARRcopy(arr, prov);
 
-  free_all(arr);
+  STRARRfree_all(arr);
 
-  allocate(arr, prov_cap * 2);
-  copy(prov, arr);
+  STRARRallocate(arr, prov_cap * 2);
+  STRARRcopy(prov, arr);
 }
 
   
-void append(struct str_arr* arr, char* name) {
+void STRARRappend(struct str_arr* arr, char* name) {
   if (arr->len + 1 > arr->cap) {
-    duplicate_mem(arr);
+    STRARRduplicate_mem(arr);
   }
   arr->names[arr->len] = name;
   arr->len += 1;
 }
 
-void printarr(struct str_arr* arr) {
+void STRARRprint_arr(struct str_arr* arr) {
   if (arr->len <= 0) {
     printf("array vazio :(\n");
     return;
@@ -67,12 +67,12 @@ void printarr(struct str_arr* arr) {
 
 }
 
-void remove_end(struct str_arr* arr) {
+void STRARRremove_end(struct str_arr* arr) {
   if (arr->len >0)
     arr->len -= 1;
 }
 
-bool remove_elem(struct str_arr* arr, unsigned i) {
+bool STRARRremove_elem(struct str_arr* arr, unsigned i) {
   if (arr->len <= i) return false;
   arr->len -= 1;
   for (char j=i; j<arr->len; j++) {
@@ -81,9 +81,9 @@ bool remove_elem(struct str_arr* arr, unsigned i) {
   return true;
 }
 
-bool insert_elem(struct str_arr* arr, char* name, unsigned i) {
+bool STRARRinsert_elem(struct str_arr* arr, char* name, unsigned i) {
   if (arr->len <= i) return false;
-  if (arr->len + 1 >= arr->cap) duplicate_mem(arr);
+  if (arr->len + 1 >= arr->cap) STRARRduplicate_mem(arr);
   for (char j=arr->len - 1; j>0; j--) {
     arr->names[j + 1] = arr->names[j];
   }
@@ -99,7 +99,7 @@ int main() {
   lu_names = (struct str_arr*) malloc(sizeof(void*));
   allocate(lu_names, 5);
   append(lu_names, "yyyyyyy3so");
-  printarr(lu_names);
+  pnodesrintarr(lu_names);
   printf("cap %d\n", lu_names->cap);
   printf("len %d\n", lu_names->len);
   append(lu_names, "yyyyyyy3so");
