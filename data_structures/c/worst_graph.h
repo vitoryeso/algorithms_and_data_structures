@@ -9,6 +9,8 @@ struct graph {
   struct edge_arr* edges;
 };
 
+void print_graph(struct graph* grafo);
+
 /**
 * Se o grafo for ponderado, inicializamos cada posicao da matriz com INT_MAX.
 * * Se o grafo for não ponderado, inicializamos cada posicao da matriz com 0.

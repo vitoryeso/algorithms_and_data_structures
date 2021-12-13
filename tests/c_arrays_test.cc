@@ -46,6 +46,4 @@ TEST(C_ARRAYS_TESTS, EDGE_ARR) {
   EXPECT_EQ(lu_edges->edges[0].dest_id, lu_edge->dest_id);
   EXPECT_EQ(lu_edges->edges[0].orig_id, lu_edge->orig_id);
   EXPECT_EQ(lu_edges->edges[0].weight, lu_edge->weight);
-
-
 }

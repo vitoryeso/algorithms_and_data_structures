@@ -46,7 +46,7 @@ void EDGARRduplicate_mem(struct edge_arr* arr) {
 }
 
 void EDGARRprint_edge(struct edge* E) {
-  printf("%d => %d; peso %d\n", E->orig_id, E->dest_id, E->weight);
+  printf("%d => %d peso %d\n", E->orig_id, E->dest_id, E->weight);
 }
 
 void EDGARRprint_arr(struct edge_arr* arr) {
@@ -54,6 +54,7 @@ void EDGARRprint_arr(struct edge_arr* arr) {
     printf("array vazio!\n");
     return ;
   }
+  printf("\n");
   for(char i=0; i<arr->len; i++) {
     EDGARRprint_edge(&arr->edges[i]);
   }
