@@ -27,7 +27,7 @@ int main() {
 }
 */
 
-void print_graph(struct graph* grafo) {
+void WGprint_graph(struct graph* grafo) {
   printf("NODES: ");
   STRARRprint_arr(grafo->nodes);
   printf("EDGES: ");
@@ -35,11 +35,11 @@ void print_graph(struct graph* grafo) {
   printf("\n");
 }
 
-bool saoConectados(struct graph* grafo, char* rotuloVOrigem, char* rotuloVDestino) {
+bool WGsaoConectados(struct graph* grafo, char* rotuloVOrigem, char* rotuloVDestino) {
   int id_origem, id_destino;
-  id_origem = obterIndiceVertice(grafo, rotuloVOrigem);
+  id_origem = WGobterIndiceVertice(grafo, rotuloVOrigem);
   if (id_origem == -1) return false;
-  id_destino = obterIndiceVertice(grafo, rotuloVDestino);
+  id_destino = WGobterIndiceVertice(grafo, rotuloVDestino);
   if (id_destino == -1) return false;
 
   for (char i=0; i<grafo->edges->len; i++) {
@@ -51,11 +51,11 @@ bool saoConectados(struct graph* grafo, char* rotuloVOrigem, char* rotuloVDestin
   return false;
 }
 
-void inserirVertice(struct graph* grafo, char* rotuloVertice) {
+void WGinserirVertice(struct graph* grafo, char* rotuloVertice) {
   STRARRappend(grafo->nodes, rotuloVertice);
 }
 
-int obterIndiceVertice(struct graph* grafo, char* rotuloVertice) {
+int WGobterIndiceVertice(struct graph* grafo, char* rotuloVertice) {
   for (char i=0; i<grafo->nodes->len; i++) {
     if (strcmp(rotuloVertice, grafo->nodes->names[i]) == 0) {
       return i;
@@ -64,11 +64,11 @@ int obterIndiceVertice(struct graph* grafo, char* rotuloVertice) {
   return -1;
 }
 
-void inserirAresta(struct graph* grafo, char* rotuloVOrigem, char* rotuloVDestino, int peso) {
+void WGinserirAresta(struct graph* grafo, char* rotuloVOrigem, char* rotuloVDestino, int peso) {
   int id_origem, id_destino;
-  id_origem = obterIndiceVertice(grafo, rotuloVOrigem);
+  id_origem = WGobterIndiceVertice(grafo, rotuloVOrigem);
   if (id_origem == -1) return;
-  id_destino = obterIndiceVertice(grafo, rotuloVDestino);
+  id_destino = WGobterIndiceVertice(grafo, rotuloVDestino);
   if (id_destino == -1) return;
 
   struct edge E;
@@ -79,7 +79,7 @@ void inserirAresta(struct graph* grafo, char* rotuloVOrigem, char* rotuloVDestin
   EDGARRappend(grafo->edges, E);
 }
 
-struct graph* inicializar(int numVertices, bool ponderado) {
+struct graph* WGinicializar(int numVertices, bool ponderado) {
   struct graph* grafo;
   grafo = (struct graph*) malloc(sizeof(void*));
   
