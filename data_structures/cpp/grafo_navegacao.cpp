@@ -10,6 +10,30 @@ void print_arr(bool *vi, int len) {
     cout << endl;
 }
 
+void print_vertices(vector<string> vec) {
+    for (unsigned i=0; i<vec.size(); i++) {
+        cout << vec[i] << "; ";
+    }
+    cout << endl;
+}
+
+bool *arr_xor(bool *arr_1, bool *arr_2, unsigned size) {
+    bool *out = new bool[size];
+    for (unsigned i=0; i<size; i++) {
+        out[i] = arr_1[i] xor arr_2[i];
+    }
+    return out;
+}
+
+bool *arr_or(bool *arr_1, bool *arr_2, unsigned size) {
+    bool *out = new bool[size];
+    for (unsigned i=0; i<size; i++) {
+        out[i] = arr_1[i] or arr_2[i];
+    }
+    return out;
+}
+
+
 class GrafoListaAdj {
 private:
     vector<string> vertices;
@@ -171,37 +195,30 @@ public:
     **/
     int colorir() {
         //IMPLEMENTAR
-        bool *visitados = new bool[vertices.size()];
-        char colors = 1;
-
         unsigned len_vertices = vertices.size();
+
+        bool *visitados = new bool[len_vertices];
+        bool *last_visitados = new bool[len_vertices];
+        char colors = 0;
+
         if (len_vertices <= 0)
             return 0;
 
         for (unsigned i=0; i<len_vertices; i++) {
             visitados[i] = false;
+            last_visitados[i] = false;
         }
-
-        print_arr(visitados, vertices.size());
-        dfs(vertices[0], visitados);
-        for (unsigned i=0; i<len_vertices; i++) {
-            if (visitados[i]) {
-                vertices[i] = colors;
-            }
-        }
-
-        print_arr(visitados, vertices.size());
 
         for (unsigned i=0; i<len_vertices; i++) {
             if (!visitados[i]) {
                 dfs(vertices[i], visitados);
-                for (unsigned i=0; i<len_vertices; i++) {
-                    if (visitados[i]) {
-                        if (vertices[i] == colors) {
-                            vertices[i] = colors + 1;
-                        }
+                last_visitados = arr_xor(visitados, last_visitados, len_vertices);
+                for (unsigned j=0; j<len_vertices; j++) {
+                    if (last_visitados[j]) {
+                        vertices[j] = colors + 1;
                     }
                 }
+                last_visitados = arr_or(visitados, last_visitados, len_vertices);
                 colors += 1;
             }
         }
