@@ -235,9 +235,42 @@ public:
     * Não é uma função recursiva. 
     * É necessário utilizar a ED fila.
     **/
-    //int* bfs(string rotuloVOrigem) {
+    int* bfs(string rotuloVOrigem) {
         //IMPLEMENTAR
-    //}
+        int idx = obterIndiceVertice(rotuloVOrigem);
+        if (idx == -1) {
+            return nullptr;
+        }
+
+        unsigned len_vertices = vertices.size();
+        bool *visitados = new bool[len_vertices];
+        int *distances = new int[len_vertices];
+        for (unsigned i=0; i<len_vertices; i++) {
+            visitados[i] = false;
+            distances[i] = 0;
+        }
+
+        queue<int> q;
+        q.push(idx);
+        visitados[idx] = true;
+
+        while (!q.empty()) {
+            vector<pair<int, int>> neighbors;
+            int next_idx = q.front();
+            q.pop();
+
+            neighbors = arestas[next_idx];
+
+            for (unsigned i=0; i<neighbors.size(); i++) {
+                if (!visitados[neighbors[i].first]) {
+                    q.push(neighbors[i].first);
+                    visitados[neighbors[i].first] = true;
+                    distances[neighbors[i].first] = distances[next_idx] + 1;
+                }
+            }
+        }
+        return distances;
+    }
 
     vector<string> getVertices() {
         return vertices;
