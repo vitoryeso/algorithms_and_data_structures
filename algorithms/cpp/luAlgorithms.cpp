@@ -8,6 +8,8 @@
 using namespace std;
 
 void selection_sort(vector<int>& V){
+    if(V.size() <= 1) return; // Array vazio ou com 1 elemento já está ordenado
+    
     for(unsigned i=0; i<V.size() - 1; i++) {
         unsigned min = i;
         for(unsigned j=i + 1; j<V.size(); j++) {
@@ -86,10 +88,13 @@ void merge_sort(vector<int>& V, int p, int r) {
 }
 
 void merge_sort(vector<int>& V) {
+  if(V.size() <= 1) return; // Array vazio ou com 1 elemento já está ordenado
   merge_sort(V, 0, V.size() - 1);
 }
 
 void quick_sort(vector<int>& V, const string pivot_choice) {
+        if(V.size() <= 1) return; // Array vazio ou com 1 elemento já está ordenado
+        
         if(pivot_choice == "random") randomized_quick_sort(V, 0, V.size() - 1);
         else if(pivot_choice == "median3") median3_quick_sort(V, 0, V.size() - 1);
         else if(pivot_choice == "last") quick_sort(V, 0, V.size() - 1);
@@ -127,6 +132,8 @@ void randomized_quick_sort(vector<int>& V, const unsigned p, const unsigned r) {
 }
 
 const unsigned randomized_partition(vector<int>& V, const unsigned p, const unsigned r) {
+    if(p >= r) return p; // Caso base para arrays pequenos
+    
     random_device dev;
     mt19937 rng(dev());
     uniform_int_distribution<mt19937::result_type> dist(p, r); 
@@ -145,7 +152,9 @@ void median3_quick_sort(vector<int>& V, const unsigned p, const unsigned r) {
 }
 
 const unsigned median3_partition(vector<int>& V, const unsigned p, const unsigned r) {
-    int provId = (r - p)/2;
+    if(p >= r) return p; // Caso base para arrays pequenos
+    
+    int provId = p + (r - p)/2;
     if(V[p] > V[provId]) { 
         if(V[p] < V[r]) swap(V[p], V[r]);
         else if(V[provId] > V[r]) swap(V[provId], V[r]);
