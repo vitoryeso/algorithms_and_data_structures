@@ -2,41 +2,12 @@
 #include <vector>
 #include <queue>
 #include <tuple>
+#include "../../utils/graph_utils.h"
 
 using namespace std;
 
 #define POS_INF 1000000000
 #define NEG_INF -1000000000
-
-void print_arr(bool *vi, int len) {
-    for (int i=0; i<len; i++) {
-        cout << vi[i] << " ";
-    }
-    cout << endl;
-}
-
-void print_vertices(vector<string> vec) {
-    for (unsigned i=0; i<vec.size(); i++) {
-        cout << vec[i] << "; ";
-    }
-    cout << endl;
-}
-
-bool *arr_xor(bool *arr_1, bool *arr_2, unsigned size) {
-    bool *out = new bool[size];
-    for (unsigned i=0; i<size; i++) {
-        out[i] = arr_1[i] xor arr_2[i];
-    }
-    return out;
-}
-
-bool *arr_or(bool *arr_1, bool *arr_2, unsigned size) {
-    bool *out = new bool[size];
-    for (unsigned i=0; i<size; i++) {
-        out[i] = arr_1[i] or arr_2[i];
-    }
-    return out;
-}
 
 class GrafoListaAdj {
 private:
@@ -357,8 +328,50 @@ public:
     **/
     int* dijkstra(string rotuloVOrigem) {
         //IMPLEMENTAR
-        int* w;
-        return w;
+        int idx = obterIndiceVertice(rotuloVOrigem);
+        if (idx == -1) {
+            return nullptr;
+        }
+
+        unsigned len_vertices = vertices.size();
+        bool *visitados = new bool[len_vertices];
+        int *distances = new int[len_vertices];
+        
+        for (unsigned i=0; i<len_vertices; i++) {
+            visitados[i] = false;
+            distances[i] = POS_INF;
+        }
+        distances[idx] = 0;
+
+        // Implementação básica do Dijkstra
+        for (unsigned i=0; i<len_vertices; i++) {
+            // Encontrar o vértice com menor distância não visitado
+            int u = -1;
+            int min_dist = POS_INF;
+            for (unsigned j=0; j<len_vertices; j++) {
+                if (!visitados[j] && distances[j] < min_dist) {
+                    min_dist = distances[j];
+                    u = j;
+                }
+            }
+            
+            if (u == -1) break; // Todos os vértices foram visitados
+            
+            visitados[u] = true;
+            
+            // Atualizar distâncias dos vizinhos
+            for (unsigned j=0; j<arestas[u].size(); j++) {
+                int v = arestas[u][j].first;
+                int weight = arestas[u][j].second;
+                
+                if (!visitados[v] && distances[u] != POS_INF && 
+                    distances[u] + weight < distances[v]) {
+                    distances[v] = distances[u] + weight;
+                }
+            }
+        }
+        
+        return distances;
     }
 
     vector<string> getVertices() {

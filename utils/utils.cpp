@@ -146,7 +146,8 @@ void sort_vector(vector<vector<int>>& vectors, int32_t selectedVector, int32_t S
                 break; 
 
             case MERGE_INSERTION:
-                merge_insertion_sort(vectors[selectedVector]);
+                // merge_insertion_sort não implementado, usando merge_sort
+                merge_sort(vectors[selectedVector]);
                 break;
 
             case QUICK:

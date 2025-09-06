@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include "../data_structures/cpp/grafo_menor_caminho.cpp"
+#include "../utils/test_utils.h"
 
 using namespace std;
 
@@ -33,18 +34,6 @@ void construirGrafoPonderado(GrafoListaAdj* grafo) {
 	grafo->inserirArestaNaoDirecionada("v8", "v9", 8);
 }
 
-/* Funcao auxiliar para inserir uma sequencia de vertices comecando
- * em ini e terminando em fim. Ex: v1, v2, v3, ..., v9.
- */
-void inserirVertices(GrafoListaAdj* grafo, int ini, int fim) {
-	for (int i = ini; i <= fim; i++) {
-		string rotulo;
-		stringstream sstm;
-		sstm << "v" << i;
-		rotulo = sstm.str();
-		grafo->inserirVertice(rotulo);
-	}
-}
 
 TEST_F(MenorCaminhoTest, BellmanFordGrafoSemCicloNegativo) {
 	inserirVertices(grafo, 1, 9);

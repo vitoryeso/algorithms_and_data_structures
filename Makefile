@@ -11,4 +11,4 @@ clear:
 	rm ./bin/main_algorithms ./bin/main_data_structures ./bin/benchmark_visualizer
 
 test_all: ./tests/*.cc 
-	g++ -pthread ./tests/*.cc ./data_structures/c/*.c -lgtest -lgtest_main -o ./bin/tests && ./bin/tests
+	g++ -pthread ./tests/*.cc ./data_structures/c/*.c ./utils/*.cpp ./algorithms/cpp/luAlgorithms.cpp -lgtest -lgtest_main -o ./bin/tests && ./bin/tests

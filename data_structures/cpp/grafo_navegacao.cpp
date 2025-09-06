@@ -1,37 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include "../../utils/graph_utils.h"
 using namespace std;
-
-void print_arr(bool *vi, int len) {
-    for (int i=0; i<len; i++) {
-        cout << vi[i] << " ";
-    }
-    cout << endl;
-}
-
-void print_vertices(vector<string> vec) {
-    for (unsigned i=0; i<vec.size(); i++) {
-        cout << vec[i] << "; ";
-    }
-    cout << endl;
-}
-
-bool *arr_xor(bool *arr_1, bool *arr_2, unsigned size) {
-    bool *out = new bool[size];
-    for (unsigned i=0; i<size; i++) {
-        out[i] = arr_1[i] xor arr_2[i];
-    }
-    return out;
-}
-
-bool *arr_or(bool *arr_1, bool *arr_2, unsigned size) {
-    bool *out = new bool[size];
-    for (unsigned i=0; i<size; i++) {
-        out[i] = arr_1[i] or arr_2[i];
-    }
-    return out;
-}
 
 
 class GrafoListaAdj {

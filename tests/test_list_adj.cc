@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "../data_structures/cpp/graph_adj_list.cpp"
+#include "../utils/test_utils.h"
 
 using namespace std;
 
@@ -41,18 +42,6 @@ TEST_F(GrafoListaAdjTest, InsercaoVerticeRepetido) {
 	EXPECT_EQ(grafo->getArestas().size(), 1);
 }
 
-/* Funcao auxiliar para adicionar vertices em uma sequencia.
- * Sao adicionados no seguinte formato: "v1", "v2", ...
- */
-void inserirVertices(GrafoListaAdj* grafo, int ini, int fim) {
-	for (int i = ini; i <= fim; i++) {
-		string rotulo;
-		std::stringstream sstm;
-		sstm << "v" << i;
-		rotulo = sstm.str();
-		grafo->inserirVertice(rotulo);
-	}
-}
 
 TEST_F(GrafoListaAdjTest, InsercaoArestaNaoDirecionadaNaoPonderada) {
 	inserirVertices(grafo,1,9);

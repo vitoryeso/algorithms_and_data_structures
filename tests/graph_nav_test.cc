@@ -1,7 +1,6 @@
 #include "gtest/gtest.h"
 #include "../data_structures/cpp/grafo_navegacao.cpp"
-using namespace std;
-
+#include "../utils/test_utils.h"
 using namespace std;
 
 class GrafoListaAdjNavegacaoTest : public ::testing::Test {
@@ -53,18 +52,6 @@ void construirGrafoNaoPonderadoDirecionado(GrafoListaAdj* grafo) {
 
 }
 
-/* Funcao auxiliar para adicionar vertices em uma sequencia.
- * Sao adicionados no seguinte formato: "v1", "v2", ...
- */
-void inserirVertices(GrafoListaAdj* grafo, int ini, int fim) {
-	for (int i = ini; i <= fim; i++) {
-		string rotulo;
-		std::stringstream sstm;
-		sstm << "v" << i;
-		rotulo = sstm.str();
-		grafo->inserirVertice(rotulo);
-	}
-}
 
 TEST_F(GrafoListaAdjNavegacaoTest, haCaminho) {
 	//inserimos de v1 a v10, e v10 ficarah desconectado do componente principal
