@@ -21,17 +21,48 @@ A invariante de laço nesse exemplo é que **sempre, o próximo elemento de V a 
 
 código do insertion_sort
 
-```
+```cpp
+void insertion_sort(vector<int>& V) {
+        if (V.size() == 1) return;
+        int i, j, left;
+        for (i=1; i<V.size(); i++) {
+                for (j=i; j>0; j--) {
+                	    // swap(V[j], V[j - 1])
+                        if (V[j-1] > V[j]) {
+                                left = V[j - 1];
+                                V[j - 1] = V[j];
+                                V[j] = left;
+                        }
+                        else break;
+                }
+        }
+}
 ```
 
 código anotado
 
-```
+```cpp
+void insertion_sort(vector<int>& V) {
+        if (V.size() == 1) return;								 // c1 * 1
+        int i, j, left;										    // c2 * 1
+        for (i=1; i<V.size(); i++) {						     // c3 * (n - 1)
+                for (j=i; j>0; j--) {                              // c4 * (n - 1) * (n - i)
+                	    // swap(V[j], V[j - 1])                   
+                        if (V[j-1] > V[j]) {                       // c5 * (n - 1) * (n - 1 - i)
+                                left = V[j - 1];
+                                V[j - 1] = V[j];
+                                V[j] = left;
+                        }
+                        else break;								// c6 * (n - 1) * i - 1
+                }
+        }
+}
 ```
 
 Análise para o melhor e pior caso
 
 ```
+o melhor caso é o array ordenado, e o pior caso é o array inversamente ordenado
 ```
 
 Análise para o caso médio
