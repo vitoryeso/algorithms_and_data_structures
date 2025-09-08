@@ -45,25 +45,67 @@ código anotado
 void insertion_sort(vector<int>& V) {
         if (V.size() == 1) return;								 // c1 * 1
         int i, j, left;										    // c2 * 1
-        for (i=1; i<V.size(); i++) {						     // c3 * (n - 1)
-                for (j=i; j>0; j--) {                              // c4 * (n - 1) * (n - i)
+        for (i=1; i<V.size(); i++) {						     // c3 * n
+                for (j=i; j>0; j--) {                              // c4 * sum(1, n-1, ti)
                 	    // swap(V[j], V[j - 1])                   
-                        if (V[j-1] > V[j]) {                       // c5 * (n - 1) * (n - 1 - i)
-                                left = V[j - 1];
-                                V[j - 1] = V[j];
-                                V[j] = left;
+                        if (V[j-1] > V[j]) {                       // c5 * sum(1, n-1, ti)
+                                left = V[j - 1];				// c6 * sum(1, n-1, ti - 1)
+                                V[j - 1] = V[j];				// c7 * sum(1, n-1, ti - 1)
+                                V[j] = left;					// c8 * sum(1, n-1, ti - 1)
                         }
-                        else break;								// c6 * (n - 1) * i - 1
+                        else break;								// c9 * sum(1, n-1, 1)
                 }
         }
 }
 ```
 
-Análise para o melhor e pior caso
+Análise de _running time_ _(steps)_
 
-```
-o melhor caso é o array ordenado, e o pior caso é o array inversamente ordenado
-```
+$$
+\begin{align*}
+(I) T(n) = c_1 + c_2 + nc_3 + c_4\sum_{i=1}^{n-1}t_i + c_5\sum_{i=1}^{n-1}t_i + c_6\sum_{i=1}^{n-1}(t_i - 1) + c_7\sum_{i=1}^{n-1}(t_i - 1) + c_8\sum_{i=1}^{n-1}(t_i - 1) + c_9\sum_{i=1}^{n-1}1 \\
+\\
+(II) T(n)= c_1 + c_2 + nc_3 + (c_4 + c_5)\sum_{i=1}^{n-1}t_i + (c_6 + c_7 + c_8)\sum_{i=1}^{n-1}(t_i - 1) + c_9(n - 1)
+\end{align*}
+$$
+
+
+Análise para Melhor caso:
+$$
+\begin{align*}
+t_i = 1\\
+T(n)= c_1 + c_2 + nc_3 + (c_4 + c_5)\sum_{i=1}^{n-1}1 + (c_6 + c_7 + c_8)\sum_{i=1}^{n-1}(1 - 1) + c_9(n - 1)\\
+T(n)= c_1 + c_2 + nc_3 + (c_4 + c_5)(n - 1) + c_9(n - 1) \\
+T(n) = c_1 + c_2 + nc_3 + nc_4 - c_4 + nc_5 - c_5 + nc_9 - c_9\\
+T(n) = n(c_3 + c_4 + c_5 + c_9) + c_{22}\\
+c_{22} = c_1 + c_2 - c_4 - c_5 - c_9\\
+T(n) \approx{O(n)}
+\end{align*}
+$$
+Análise para o Pior caso:
+$$
+\begin{align}
+t_i = i\\
+\sum_{i=1}^{n-1}i = \frac{(n-1)n}{2} = \frac{n^2 - n}{2}\\
+\sum_{i=1}^{n-1}(i - 1) = \sum_{i=1}^{n-1}i - \sum_{i=1}^{n-1}1 = \frac{(n-1)n}{2} - (n - 1) = \frac{n^2 - 3n + 2}{2}\\
+\\
+T(n) = c_1 + c_2 + nc_3 + (c_4 + c_5)\sum_{i=1}^{n-1}i + (c_6 + c_7 + c_8)\sum_{i=1}^{n-1}(i - 1) + c_9(n - 1)\\
+T(n) = c_1 + c_2 + nc_3 + (c_4 + c_5)\frac{n^2 - n}{2} + (c_6 + c_7 + c_8)\frac{n^2 - 3n + 2}{2} + c_9(n - 1)\\
+T(n) = c_1 + c_2 + c_3n + \left(\frac{c_4+c_5}{2}\right)n^2 - \left(\frac{c_4+c_5}{2}\right)n + \left(\frac{c_6+c_7+c_8}{2}\right)n^2 - \left(\frac{3(c_6+c_7+c_8)}{2}\right)n + (c_6+c_7+c_8) + c_9n - c_9\\
+\\
+T(n) = \left(\frac{c_4+c_5+c_6+c_7+c_8}{2}\right)n^2 + \left(c_3 + c_9 - \frac{c_4+c_5}{2} - \frac{3(c_6+c_7+c_8)}{2}\right)n + (c_1 + c_2 + c_6+c_7+c_8 - c_9)\\
+\\
+T(n) = an^2 + bn + c\\
+\\
+Portanto, T(n) \approx O(n^2)\\
+\\
+\text{Onde os coeficientes a, b, e c são constantes:}\\
+a = \frac{c_4+c_5+c_6+c_7+c_8}{2}\\
+b = c_3 + c_9 - \frac{c_4+c_5 + 3(c_6+c_7+c_8)}{2}\\
+c = c_1 + c_2 + c_6 + c_7 + c_8 - c_9
+\end{align}
+$$
+
 
 Análise para o caso médio
 
