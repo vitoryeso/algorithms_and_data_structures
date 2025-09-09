@@ -84,7 +84,6 @@ T(n) \approx{O(n)}
 $$
 Análise para o Pior caso:
 $$
-\begin{align}
 t_i = i\\
 \sum_{i=1}^{n-1}i = \frac{(n-1)n}{2} = \frac{n^2 - n}{2}\\
 \sum_{i=1}^{n-1}(i - 1) = \sum_{i=1}^{n-1}i - \sum_{i=1}^{n-1}1 = \frac{(n-1)n}{2} - (n - 1) = \frac{n^2 - 3n + 2}{2}\\
@@ -103,29 +102,13 @@ Portanto, T(n) \approx O(n^2)\\
 a = \frac{c_4+c_5+c_6+c_7+c_8}{2}\\
 b = c_3 + c_9 - \frac{c_4+c_5 + 3(c_6+c_7+c_8)}{2}\\
 c = c_1 + c_2 + c_6 + c_7 + c_8 - c_9
-\end{align}
 $$
 
+### **Experimento:** 
 
-Análise para o caso médio
+Desempenho do Insertion Sort (100 ≤ n ≤ 20k) para vetores ordenado, aleatório e inverso. As linhas tracejadas f(n)=n e g(n)=n² confirmam: melhor caso ~O(n) e pior caso ~O(n²).
 
-```
-```
-
-Experimento para o melhor e pior caso
-
-```
-```
-
-Experimento para o caso médio
-
-```
-```
-
-Comparação de todos os casos no mesmo plot com escala
-
-```
-```
+<img src="insertion_sort_detailed_performance.png" alt="Experimento Insertion Sort" width="2000">
 
 
 
@@ -133,6 +116,175 @@ Comparação de todos os casos no mesmo plot com escala
 
 ### **Análise, para cada tipo de entrada, se existe algum ponto a partir do qual um algoritmo passa a ser mais rápido que o outro.**
 
-```
+
+
+### Merge Sort
+
+```cpp
+void merge(vector<int>& V, int p,int q,int r) {
+  int n1 = q - p + 1;
+  int n2 = r - q;
+  int V1[n1], V2[n2];
+  for(int i=0; i<n1; i++)
+    V1[i] = V[p + i];
+
+  for(int i=0; i<n2; i++)
+    V2[i] = V[i + q + 1];
+
+  int i = 0, j = 0;
+  int v_idx = p;
+
+  while(i<n1 && j<n2){
+      if(V1[i] <= V2[j]) {
+          V[v_idx] = V1[i];
+          i++;
+      }
+      else {
+          V[v_idx] = V2[j];
+          j++;
+      }
+      v_idx++;
+  }
+  if(n1 == i) {
+      for(int j2=j; j2<n2; j2++) {
+          V[v_idx] = V2[j2];
+          v_idx++;
+      }
+  }
+  else {
+      for(int i2=i; i2<n1; i2++) {
+          V[v_idx] = V1[i2];
+          v_idx++;
+      }
+  }
+}
+
+void merge_sort(vector<int>& V, int p, int r) {
+  if(p>=r){
+    return;//returns recursively
+  }
+
+  int m = (p+r-1)/2;
+  merge_sort(V ,p,m);
+  merge_sort(V ,m+1,r);
+  merge(V ,p,m,r);
+}
 ```
 
+
+
+------
+
+## 3.1 Estrutura da recursão
+
+O `merge_sort` divide sempre o vetor em duas partes quase iguais:
+$$
+T(n) = 2T\!\left(\frac{n}{2}\right) + \Theta(n)
+$$
+
+- chamadas recursivas para as duas metades.
+  $$
+  2T(n/2)
+  $$
+
+- custo do `merge`, que sempre percorre **todos os elementos** de cada metade, independente da ordem.
+  $$
+  \Theta(n)
+  $$
+  
+
+------
+
+## 3.2 Exemplo numérico
+
+Entrada:
+$$
+V = [5, 2, 4, 7, 1, 3, 2, 6]
+$$
+
+
+Divisões:
+$$
+\begin{aligned} [5,2,4,7,1,3,2,6]  &\to [5,2,4,7] \;\;\; [1,3,2,6] \\ &\to [5,2] \; [4,7] \;\;\; [1,3] \; [2,6] \\ &\to [5]\;[2]\;[4]\;[7]\;\;\;[1]\;[3]\;[2]\;[6] \end{aligned}
+$$
+
+
+Em cada nível, o `merge` percorre **todos os elementos** das duas metades:
+
+- Merge `[5]` e `[2]`, `[4]` e `[7]`,  `[1]` e `[3]`, `[2]` e `[6]` : custo:
+  $$
+  \Theta(2)
+  $$
+  
+
+- Merge `[2,5]` e `[4,7]`,  `[1,3]` e `[2,6]`: custo:
+  $$
+  \Theta(4)
+  $$
+  
+
+- Merge `[2,4,5,7]` e `[1,2,3,6]`: custo:
+  $$
+  \Theta(8)
+  $$
+  
+
+Somando:
+$$
+2+2+2+2+4+4+8 = 24 = \Theta(8 \log 8)
+$$
+
+
+------
+
+## 3.3 Melhor, pior e caso médio
+
+- **Melhor caso (vetor já ordenado)**
+   O `merge` ainda copia todos os elementos de ambos os vetores temporários.
+  $$
+  \Theta(n)
+  $$
+
+- **Pior caso (vetor ordenado invertido)**
+   O `merge` também percorre todos os elementos de ambos os vetores temporários.
+  $$
+  \Theta(n)
+  $$
+
+- **Caso médio (vetor aleatório, como o exemplo acima)**
+   O `merge` faz comparações variadas, mas o laço `while(i<n1 && j<n2)` garante percorrer todos os elementos.
+  $$
+  \Theta(n)
+  $$
+
+------
+
+## 3.4 Análise de Tempo de Execução
+
+O número de níveis da recursão é
+$$
+\log_2 n
+$$
+O custo por nível é
+$$
+\Theta(n)
+$$
+Portanto:
+$$
+T(n) = \Theta(n \log n) \quad \text{(melhor, pior e caso médio)}
+$$
+
+
+### Comparação Experimental: Merge Sorte e Insertion Sort
+
+n = 100, ... 20k
+
+Para o vetor ordenado ou próximo de ordenado, o insertion sort é melhor
+
+Para o ovetor inversamente ordenado e aleatório, o merge sort é melhor
+
+<img src="sorting_algorithms_comparison.png" alt="Experimento Insertion Sort" width="4767">
+
+
+
+**Vítor Yeso Fidelis Freitas - Programa de Pós Graduação em Engenharia Elétrica e Computação - 2025.2**
