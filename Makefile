@@ -15,3 +15,6 @@ clear:
 
 test_all: ./tests/*.cc 
 	g++ -pthread ./tests/*.cc ./data_structures/c/*.c ./utils/*.cpp ./algorithms/cpp/luAlgorithms.cpp -lgtest -lgtest_main -o ./bin/tests && ./bin/tests
+
+test_matrix: ./tests/matrix_multiplication_test.cc
+	g++ -pthread ./tests/matrix_multiplication_test.cc ./algorithms/cpp/luAlgorithms.cpp -lgtest -lgtest_main -o ./bin/test_matrix && ./bin/test_matrix

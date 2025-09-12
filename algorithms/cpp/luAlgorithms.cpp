@@ -3,6 +3,7 @@
 #include <random>
 #include <string>
 #include <vector>
+#include <stdexcept>
 #include "luAlgorithms.h"
 
 using namespace std;
@@ -77,11 +78,13 @@ void merge(vector<int>& V, int p,int q,int r) {
 }
 
 void merge_sort(vector<int>& V, int p, int r) {
+  cout << "inside merge sort with parameters." << endl;
   if(p>=r){
     return;//returns recursively
   }
 
   int m = (p+r-1)/2;
+  cout << "m: " << m << endl;
   merge_sort(V ,p,m);
   merge_sort(V ,m+1,r);
   merge(V ,p,m,r);
@@ -89,6 +92,7 @@ void merge_sort(vector<int>& V, int p, int r) {
 
 void merge_sort(vector<int>& V) {
   if(V.size() <= 1) return; // Array vazio ou com 1 elemento já está ordenado
+  cout << "inside merge sort. V.size() - 1 = " << V.size() - 1 << endl;
   merge_sort(V, 0, V.size() - 1);
 }
 
@@ -276,3 +280,122 @@ void radix_sort(vector<int>& V) {
      radix_sort(V, base, d);
 }
 
+
+static void assert_square_same_dim_or_throw(const Matrix& A, const Matrix& B) {
+    if (A.empty() || B.empty()) throw invalid_argument("Matrizes vazias nao sao suportadas");
+    size_t a_rows = A.size();
+    size_t a_cols = A[0].size();
+    size_t b_rows = B.size();
+    size_t b_cols = B[0].size();
+    for (size_t i = 0; i < a_rows; i++) if (A[i].size() != a_cols) throw invalid_argument("Matriz A irregular");
+    for (size_t i = 0; i < b_rows; i++) if (B[i].size() != b_cols) throw invalid_argument("Matriz B irregular");
+    if (a_rows != a_cols) throw invalid_argument("A deve ser quadrada");
+    if (b_rows != b_cols) throw invalid_argument("B deve ser quadrada");
+    if (a_rows != b_rows) throw invalid_argument("Dimensoes diferentes para matrizes quadradas");
+}
+
+Matrix matmul_naive(const Matrix& A, const Matrix& B) {
+    assert_square_same_dim_or_throw(A, B);
+    // if size is 1x1, multiply the matrices using ops
+    if (A.size() == 1 && B.size() == 1) {
+        return Matrix({{A[0][0] * B[0][0]}});
+    }
+
+    // if size is 2x2, multiply the matrices using ops
+    if (A.size() == 2 && B.size() == 2) {
+        // Definindo matriz de resultado aqui para evitar criação de vector temporário
+        Matrix result(2, vector<long long>(2));
+        
+        // Calcular elementos diretamente sem operações intermediárias
+        const long long a00 = A[0][0], a01 = A[0][1];
+        const long long a10 = A[1][0], a11 = A[1][1];
+        const long long b00 = B[0][0], b01 = B[0][1];
+        const long long b10 = B[1][0], b11 = B[1][1];
+        
+        result[0][0] = a00 * b00 + a01 * b10;
+        result[0][1] = a00 * b01 + a01 * b11;
+        result[1][0] = a10 * b00 + a11 * b10;
+        result[1][1] = a10 * b01 + a11 * b11;
+        
+        return result;
+    }
+
+    // defining the 4 submatrices of A and B
+    size_t n = A.size();
+    size_t half = n / 2;
+    
+    // Create submatrices by extracting quadrants
+    Matrix A11(half), A12(half), A21(half), A22(half);
+    Matrix B11(half), B12(half), B21(half), B22(half);
+    
+    for (size_t i = 0; i < half; i++) {
+        for (size_t j = 0; j < half; j++) {
+            // Upper-left quadrant
+            A11[i][j] = A[i][j];
+            B11[i][j] = B[i][j];
+            
+            // Upper-right quadrant
+            A12[i][j] = A[i][j + half];
+            B12[i][j] = B[i][j + half];
+            
+            // Lower-left quadrant
+            A21[i][j] = A[i + half][j];
+            B21[i][j] = B[i + half][j];
+            
+            // Lower-right quadrant
+            A22[i][j] = A[i + half][j + half];
+            B22[i][j] = B[i + half][j + half];
+        }
+    }
+
+    // C11 = A11*B11 + A12*B21
+    // C12 = A11*B12 + A12*B22
+    // C21 = A21*B11 + A22*B21
+    // C22 = A21*B21 + A22*B22
+
+    // Recursively multiply the submatrices
+    Matrix C11_row = matmul_naive(A11, B11);
+    Matrix C11_col = matmul_naive(A12, B21);
+
+    Matrix C12_row = matmul_naive(A11, B12);
+    Matrix C12_col = matmul_naive(A12, B22);
+
+    Matrix C21_row = matmul_naive(A21, B11);
+    Matrix C21_col = matmul_naive(A22, B21);
+
+    Matrix C22_row = matmul_naive(A21, B12);
+    Matrix C22_col = matmul_naive(A22, B22);
+
+    // Define the submatrices of C
+    Matrix C11(half), C12(half), C21(half), C22(half);
+    
+    // Add the products for the correct result (C = A*B in block form)
+    // Add matrices element by element
+    for (size_t i = 0; i < half; i++) {
+        for (size_t j = 0; j < half; j++) {
+            C11[i][j] = C11_row[i][j] + C11_col[i][j];
+            C12[i][j] = C12_row[i][j] + C12_col[i][j];
+            C21[i][j] = C21_row[i][j] + C21_col[i][j];
+            C22[i][j] = C22_row[i][j] + C22_col[i][j];
+        }
+    }
+    
+    // Assemble final result matrix
+    Matrix C(n);
+    for (size_t i = 0; i < half; i++) {
+        for (size_t j = 0; j < half; j++) {
+            C[i][j] = C11[i][j];                    // Upper-left
+            C[i][j + half] = C12[i][j];             // Upper-right
+            C[i + half][j] = C21[i][j];             // Lower-left
+            C[i + half][j + half] = C22[i][j];      // Lower-right
+        }
+    }
+    
+    return C;
+}
+
+Matrix matmul_strassen(const Matrix& A, const Matrix& B, const unsigned cutoff) {
+    (void)cutoff;
+    assert_square_same_dim_or_throw(A, B);
+    throw runtime_error("matmul_strassen not implemented");
+}
