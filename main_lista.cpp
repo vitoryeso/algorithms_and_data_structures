@@ -24,7 +24,13 @@ void insertion_sort(vector<int>& V) {
 
 // Assinatura para implementar o merge_sort
 void merge_sort(vector<int>& V) {
-
+    if (V.size() == 1) return;
+    int mid = V.size() / 2;
+    vector<int> left(V.begin(), V.begin() + mid);
+    vector<int> right(V.begin() + mid, V.end());
+    merge_sort(left);
+    merge_sort(right);
+    merge(left, right, V);
 }
 
 static vector<int> read_vector_from_brackets_line() {
