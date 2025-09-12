@@ -31,6 +31,7 @@ static vector<int> generate_random_vector(int size) {
 
 static double measure_sorting_time(void(*sort_fn)(vector<int>&), vector<int> v) {
     auto start = chrono::high_resolution_clock::now();
+    cout << "len v (before run sort_fn): " << v.size() << endl;
     sort_fn(v);
     auto end = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
