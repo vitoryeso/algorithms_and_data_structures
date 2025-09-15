@@ -353,6 +353,15 @@ Matrix matmul_naive(const Matrix& A, const Matrix& B) {
     // C21 = A21*B11 + A22*B21
     // C22 = A21*B21 + A22*B22
 
+    // STRASSEN
+    // M1 = (A11 + A22) * (B11 + B22)
+    // M2 = (A21 + A22) * B11
+    // M3 = A11 * (B12 * B22)
+    // M4 = A22 * (B21 - B11)
+    // M5 = (A11 + A12) * B22
+    // M6 = (A21 - A11) * (B11 + B12)
+    // M7 = (A12 - A22) * (B21 + B22)
+
     // Recursively multiply the submatrices
     Matrix C11_row = matmul_naive(A11, B11);
     Matrix C11_col = matmul_naive(A12, B21);
