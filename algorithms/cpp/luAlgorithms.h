@@ -78,6 +78,10 @@ const int binary_search(vector<int>& V, const unsigned p, const unsigned r, cons
 
 // Multiplicação de matrizes (convencional e Strassen)
 Matrix matmul_naive(const Matrix& A, const Matrix& B);
-Matrix matmul_strassen(const Matrix& A, const Matrix& B, const unsigned cutoff = 64);
+Matrix matmul_strassen(const Matrix& A, const Matrix& B, const unsigned cutoff = 128);
+
+// Funções auxiliares para Strassen
+Matrix add_matrices(const Matrix& A, const Matrix& B);
+Matrix subtract_matrices(const Matrix& A, const Matrix& B);
 
 #endif

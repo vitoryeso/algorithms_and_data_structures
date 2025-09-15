@@ -403,8 +403,143 @@ Matrix matmul_naive(const Matrix& A, const Matrix& B) {
     return C;
 }
 
+// Funções auxiliares para o algoritmo de Strassen
+Matrix add_matrices(const Matrix& A, const Matrix& B) {
+    size_t n = A.size();
+    Matrix result(n);
+    
+    for (size_t i = 0; i < n; i++) {
+        for (size_t j = 0; j < n; j++) {
+            result[i][j] = A[i][j] + B[i][j];
+        }
+    }
+    
+    return result;
+}
+
+Matrix subtract_matrices(const Matrix& A, const Matrix& B) {
+    size_t n = A.size();
+    Matrix result(n);
+    
+    for (size_t i = 0; i < n; i++) {
+        for (size_t j = 0; j < n; j++) {
+            result[i][j] = A[i][j] - B[i][j];
+        }
+    }
+    
+    return result;
+}
+
 Matrix matmul_strassen(const Matrix& A, const Matrix& B, const unsigned cutoff) {
-    (void)cutoff;
     assert_square_same_dim_or_throw(A, B);
-    throw runtime_error("matmul_strassen not implemented");
+    
+    // Se a matriz for pequena, usa algoritmo tradicional
+    if (A.size() <= cutoff) {
+        return matmul_naive(A, B);
+    }
+    
+    // Casos base para matrizes pequenas
+    if (A.size() == 1 && B.size() == 1) {
+        return Matrix({{A[0][0] * B[0][0]}});
+    }
+    
+    if (A.size() == 2 && B.size() == 2) {
+        Matrix result(2, vector<long long>(2));
+        
+        const long long a00 = A[0][0], a01 = A[0][1];
+        const long long a10 = A[1][0], a11 = A[1][1];
+        const long long b00 = B[0][0], b01 = B[0][1];
+        const long long b10 = B[1][0], b11 = B[1][1];
+        
+        result[0][0] = a00 * b00 + a01 * b10;
+        result[0][1] = a00 * b01 + a01 * b11;
+        result[1][0] = a10 * b00 + a11 * b10;
+        result[1][1] = a10 * b01 + a11 * b11;
+        
+        return result;
+    }
+    
+    // Dividir as matrizes em 4 quadrantes
+    size_t n = A.size();
+    size_t half = n / 2;
+    
+    // Criar submatrizes
+    Matrix A11(half), A12(half), A21(half), A22(half);
+    Matrix B11(half), B12(half), B21(half), B22(half);
+    
+    for (size_t i = 0; i < half; i++) {
+        for (size_t j = 0; j < half; j++) {
+            A11[i][j] = A[i][j];
+            A12[i][j] = A[i][j + half];
+            A21[i][j] = A[i + half][j];
+            A22[i][j] = A[i + half][j + half];
+            
+            B11[i][j] = B[i][j];
+            B12[i][j] = B[i][j + half];
+            B21[i][j] = B[i + half][j];
+            B22[i][j] = B[i + half][j + half];
+        }
+    }
+    
+    // Algoritmo de Strassen - 7 multiplicações em vez de 8
+    // M1 = (A11 + A22) * (B11 + B22)
+    Matrix A11_plus_A22 = add_matrices(A11, A22);
+    Matrix B11_plus_B22 = add_matrices(B11, B22);
+    Matrix M1 = matmul_strassen(A11_plus_A22, B11_plus_B22, cutoff);
+    
+    // M2 = (A21 + A22) * B11
+    Matrix A21_plus_A22 = add_matrices(A21, A22);
+    Matrix M2 = matmul_strassen(A21_plus_A22, B11, cutoff);
+    
+    // M3 = A11 * (B12 - B22)
+    Matrix B12_minus_B22 = subtract_matrices(B12, B22);
+    Matrix M3 = matmul_strassen(A11, B12_minus_B22, cutoff);
+    
+    // M4 = A22 * (B21 - B11)
+    Matrix B21_minus_B11 = subtract_matrices(B21, B11);
+    Matrix M4 = matmul_strassen(A22, B21_minus_B11, cutoff);
+    
+    // M5 = (A11 + A12) * B22
+    Matrix A11_plus_A12 = add_matrices(A11, A12);
+    Matrix M5 = matmul_strassen(A11_plus_A12, B22, cutoff);
+    
+    // M6 = (A21 - A11) * (B11 + B12)
+    Matrix A21_minus_A11 = subtract_matrices(A21, A11);
+    Matrix B11_plus_B12 = add_matrices(B11, B12);
+    Matrix M6 = matmul_strassen(A21_minus_A11, B11_plus_B12, cutoff);
+    
+    // M7 = (A12 - A22) * (B21 + B22)
+    Matrix A12_minus_A22 = subtract_matrices(A12, A22);
+    Matrix B21_plus_B22 = add_matrices(B21, B22);
+    Matrix M7 = matmul_strassen(A12_minus_A22, B21_plus_B22, cutoff);
+    
+    // Calcular os quadrantes da matriz resultado usando as 7 multiplicações
+    // C11 = M1 + M4 - M5 + M7
+    Matrix C11 = add_matrices(M1, M4);
+    C11 = subtract_matrices(C11, M5);
+    C11 = add_matrices(C11, M7);
+    
+    // C12 = M3 + M5
+    Matrix C12 = add_matrices(M3, M5);
+    
+    // C21 = M2 + M4
+    Matrix C21 = add_matrices(M2, M4);
+    
+    // C22 = M1 + M3 - M2 + M6
+    Matrix C22 = add_matrices(M1, M3);
+    C22 = subtract_matrices(C22, M2);
+    C22 = add_matrices(C22, M6);
+    
+    // Montar a matriz resultado final
+    Matrix C(n);
+    for (size_t i = 0; i < half; i++) {
+        for (size_t j = 0; j < half; j++) {
+            C[i][j] = C11[i][j];                    // Upper-left
+            C[i][j + half] = C12[i][j];             // Upper-right
+            C[i + half][j] = C21[i][j];             // Lower-left
+            C[i + half][j + half] = C22[i][j];      // Lower-right
+        }
+    }
+    
+    return C;
 }
