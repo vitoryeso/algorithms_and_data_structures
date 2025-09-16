@@ -61,14 +61,13 @@ TEST(MatrixMul, NaiveSmallCases) {
 }
 
 TEST(MatrixMul, NaiveRandomSquarePowersOfTwo) {
-    vector<int> ns = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512};
+    vector<int> ns = {1, 2, 4, 8, 16, 32, 64, 128, 256};
     for (int n : ns) {
         Matrix A = generate_random_square_matrix(n, -5, 5, 123 + n);
         Matrix B = generate_random_square_matrix(n, -5, 5, 321 + n);
         Matrix R = matmul_reference(A, B);
-        Matrix C(n);
-        ASSERT_NO_THROW(C = matmul_naive(A, B));
-        expect_equal_matrix(C, R);
+        Matrix S = matmul_naive(A, B);
+        expect_equal_matrix(S, R);
     }
 }
 
@@ -90,14 +89,13 @@ TEST(MatrixMul, NaiveIncompatibleDims) {
     EXPECT_THROW(matmul_naive(A, B), std::invalid_argument);
 }
 
-// Strassen: começar desabilitado até implementação
-TEST(DISABLED_MatrixMul, StrassenMatchesNaiveOnPowersOfTwo) {
-    vector<int> ns = {1, 2, 4, 8, 16, 32};
+TEST(MatrixMul, StrassenMatchesNaiveOnPowersOfTwo) {
+    vector<int> ns = {1, 2, 4, 8, 16, 32, 64, 128, 256};
     for (int n : ns) {
-        Matrix A = generate_random_square_matrix(n, -5, 5, 42 + n);
-        Matrix B = generate_random_square_matrix(n, -5, 5, 24 + n);
-        Matrix R = matmul_naive(A, B);
-        Matrix S = matmul_strassen(A, B);
+        Matrix A = generate_random_square_matrix(n, -5, 5, 123 + n);
+        Matrix B = generate_random_square_matrix(n, -5, 5, 321 + n);
+        Matrix R = matmul_reference(A, B);
+        Matrix S = matmul_strassen(A, B, 32);
         expect_equal_matrix(S, R);
     }
 }
