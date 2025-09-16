@@ -7,40 +7,84 @@
 
 using namespace std;
 
-// Classe Matrix para multiplicação de matrizes
+// Classe Matrix para multiplicação de matrizes com armazenamento contíguo
 class Matrix {
 public:
-    vector<vector<long long>> data;
-    
+    std::vector<long long> data;
+    size_t rows, cols;
+
     // Construtor para matriz quadrada n×n
-    Matrix(int n) : data(n, vector<long long>(n, 0)) {}
-    
-    // Construtor para matriz com dimensões específicas (para compatibilidade)
-    Matrix(size_t rows, const vector<long long>& row) : data(rows, row) {}
-    
-    // Construtor a partir de iteradores (para compatibilidade com código existente)
+    Matrix(int n) : rows(n), cols(n), data(n * n, 0) {}
+
+    // Construtor para matriz com dimensões específicas
+    Matrix(size_t r, size_t c) : rows(r), cols(c), data(r * c, 0) {}
+
+    // Construtor a partir de iteradores (para compatibilidade)
     template<typename Iter>
-    Matrix(Iter begin, Iter end) : data(begin, end) {}
-    
-    // Construtor com lista de inicialização
-    Matrix(initializer_list<initializer_list<long long>> init) {
-        data.reserve(init.size());
-        for (const auto& row : init) {
-            data.emplace_back(row);
+    Matrix(Iter begin, Iter end) : rows(0), cols(0) {
+        // Este construtor é mais complexo para manter compatibilidade
+        // Vamos simplificar assumindo que recebemos um vector<vector>
+        if (begin != end) {
+            rows = std::distance(begin, end);
+            if (rows > 0) {
+                cols = begin->size();
+                data.reserve(rows * cols);
+                for (auto it = begin; it != end; ++it) {
+                    data.insert(data.end(), it->begin(), it->end());
+                }
+            }
         }
     }
-    
+
+    // Construtor com lista de inicialização
+    Matrix(std::initializer_list<std::initializer_list<long long>> init) {
+        rows = init.size();
+        if (rows > 0) {
+            cols = init.begin()->size();
+            data.reserve(rows * cols);
+            for (const auto& row : init) {
+                data.insert(data.end(), row.begin(), row.end());
+            }
+        }
+    }
+
     // Operadores para acesso aos elementos
-    vector<long long>& operator[](size_t i) { return data[i]; }
-    const vector<long long>& operator[](size_t i) const { return data[i]; }
-    
+    long long& operator()(size_t r, size_t c) {
+        return data[r * cols + c];
+    }
+
+    const long long& operator()(size_t r, size_t c) const {
+        return data[r * cols + c];
+    }
+
+    // Métodos para compatibilidade com vector (LEGACY - serão removidos)
+    struct RowProxy {
+        Matrix* matrix;
+        size_t row;
+        long long& operator[](size_t col) { return (*matrix)(row, col); }
+        const long long& operator[](size_t col) const { return (*matrix)(row, col); }
+        size_t size() const { return matrix->cols; }
+    };
+
+    RowProxy operator[](size_t r) {
+        return RowProxy{this, r};
+    }
+
+    const RowProxy operator[](size_t r) const {
+        return RowProxy{const_cast<Matrix*>(this), r};
+    }
+
     // Métodos para compatibilidade com vector
-    size_t size() const { return data.size(); }
+    size_t size() const { return rows; }
     bool empty() const { return data.empty(); }
     auto begin() { return data.begin(); }
     auto end() { return data.end(); }
     auto begin() const { return data.begin(); }
     auto end() const { return data.end(); }
+
+    // Novo método para obter ponteiro para dados
+    long long* data_ptr() { return data.data(); }
+    const long long* data_ptr() const { return data.data(); }
 };
 
 void selection_sort(vector<int>& V);
@@ -79,5 +123,10 @@ const int binary_search(vector<int>& V, const unsigned p, const unsigned r, cons
 // Multiplicação de matrizes (convencional e Strassen)
 Matrix matmul_naive(const Matrix& A, const Matrix& B);
 Matrix matmul_strassen(const Matrix& A, const Matrix& B, const unsigned cutoff = 64);
+
+// NOVAS FUNÇÕES OTIMIZADAS
+Matrix matmul_blocked(const Matrix& A, const Matrix& B, size_t block_size = 64);
+Matrix matmul_blocked_optimized(const Matrix& A, const Matrix& B, size_t block_size = 1000);
+void matmul_blocked_inplace(const Matrix& A, const Matrix& B, Matrix& C, size_t block_size = 64);
 
 #endif

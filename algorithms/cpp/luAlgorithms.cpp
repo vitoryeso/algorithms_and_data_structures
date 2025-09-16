@@ -303,7 +303,7 @@ Matrix matmul_naive(const Matrix& A, const Matrix& B) {
 
     // if size is 2x2, multiply the matrices using basic ops
     if (A.size() == 2 && B.size() == 2) {
-        Matrix result(2, vector<long long>(2));
+        Matrix result{{0, 0}, {0, 0}};
         
         const long long a00 = A[0][0], a01 = A[0][1];
         const long long a10 = A[1][0], a11 = A[1][1];
@@ -413,7 +413,7 @@ Matrix matmul_strassen(const Matrix& A, const Matrix& B, const unsigned cutoff) 
 
     // if size is 2x2, multiply the matrices using basic ops
     if (A.size() == 2 && B.size() == 2) {
-        Matrix result(2, vector<long long>(2));
+        Matrix result{{0, 0}, {0, 0}};
         
         const long long a00 = A[0][0], a01 = A[0][1];
         const long long a10 = A[1][0], a11 = A[1][1];
@@ -519,4 +519,115 @@ Matrix matmul_strassen(const Matrix& A, const Matrix& B, const unsigned cutoff) 
     }
     
     return C;
+}
+
+// ============================================================================
+// NOVAS IMPLEMENTAÇÕES OTIMIZADAS
+// ============================================================================
+
+Matrix matmul_blocked(const Matrix& A, const Matrix& B, size_t block_size) {
+    assert_square_same_dim_or_throw(A, B);
+    size_t n = A.size();
+    Matrix C(n);
+
+    // Ajusta block_size se necessário
+    if (block_size > n) block_size = n;
+
+    // Multiplicação por blocos
+    for (size_t ii = 0; ii < n; ii += block_size) {
+        for (size_t jj = 0; jj < n; jj += block_size) {
+            for (size_t kk = 0; kk < n; kk += block_size) {
+                // Limites dos blocos
+                size_t i_max = std::min(ii + block_size, n);
+                size_t j_max = std::min(jj + block_size, n);
+                size_t k_max = std::min(kk + block_size, n);
+
+                // Multiplica os blocos
+                for (size_t i = ii; i < i_max; ++i) {
+                    for (size_t j = jj; j < j_max; ++j) {
+                        long long sum = 0;
+                        for (size_t k = kk; k < k_max; ++k) {
+                            sum += A(i, k) * B(k, j);
+                        }
+                        C(i, j) += sum;
+                    }
+                }
+            }
+        }
+    }
+
+    return C;
+}
+
+Matrix matmul_blocked_optimized(const Matrix& A, const Matrix& B, size_t block_size) {
+    assert_square_same_dim_or_throw(A, B);
+    size_t n = A.size();
+    Matrix C(n);
+
+    // Otimização: block_size baseado no cache L3 (24MB)
+    // 3 * BS² * sizeof(long long) ≈ 24MB
+    // 3 * BS² * 8 ≈ 24,000,000
+    // BS² ≈ 1,000,000 → BS ≈ 1000
+    if (block_size == 1000) {
+        // Para block_size=1000, garantimos que caiba no L3
+        block_size = std::min(block_size, n);
+    }
+
+    // Multiplicação por blocos otimizada
+    for (size_t ii = 0; ii < n; ii += block_size) {
+        for (size_t jj = 0; jj < n; jj += block_size) {
+            for (size_t kk = 0; kk < n; kk += block_size) {
+                // Limites dos blocos
+                size_t i_max = std::min(ii + block_size, n);
+                size_t j_max = std::min(jj + block_size, n);
+                size_t k_max = std::min(kk + block_size, n);
+
+                // Multiplica os blocos com otimizações
+                for (size_t i = ii; i < i_max; ++i) {
+                    for (size_t k = kk; k < k_max; ++k) {
+                        long long a_ik = A(i, k);
+                        for (size_t j = jj; j < j_max; ++j) {
+                            C(i, j) += a_ik * B(k, j);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return C;
+}
+
+void matmul_blocked_inplace(const Matrix& A, const Matrix& B, Matrix& C, size_t block_size) {
+    assert_square_same_dim_or_throw(A, B);
+    if (C.size() != A.size()) {
+        throw std::invalid_argument("Matriz C deve ter as mesmas dimensões que A e B");
+    }
+
+    size_t n = A.size();
+
+    // Zera a matriz C
+    std::fill(C.data.begin(), C.data.end(), 0);
+
+    // Multiplicação por blocos in-place
+    for (size_t ii = 0; ii < n; ii += block_size) {
+        for (size_t jj = 0; jj < n; jj += block_size) {
+            for (size_t kk = 0; kk < n; kk += block_size) {
+                // Limites dos blocos
+                size_t i_max = std::min(ii + block_size, n);
+                size_t j_max = std::min(jj + block_size, n);
+                size_t k_max = std::min(kk + block_size, n);
+
+                // Multiplica os blocos
+                for (size_t i = ii; i < i_max; ++i) {
+                    for (size_t k = kk; k < k_max; ++k) {
+                        long long a_ik = A(i, k);
+                        for (size_t j = jj; j < j_max; ++j) {
+                            C(i, j) += a_ik * B(k, j);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

@@ -29,6 +29,8 @@ class MatMulBenchmark:
         self.executable_path = executable_path
         self.cutoff = cutoff
 
+    # put int and max_val here as arguments.
+    # this arguments will be benchmarked as (defaults-basic min_val, max_val, tiny values, large values, to test if the algorithms have different times for small and large values for matrix multiplication
     def generate_test_code(self, algorithm: str, size: int, seed: int = 42) -> str:
         """
         Gera código C++ para testar um algoritmo específico.
