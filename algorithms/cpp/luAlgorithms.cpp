@@ -78,13 +78,11 @@ void merge(vector<int>& V, int p,int q,int r) {
 }
 
 void merge_sort(vector<int>& V, int p, int r) {
-  cout << "inside merge sort with parameters." << endl;
   if(p>=r){
     return;//returns recursively
   }
 
   int m = (p+r-1)/2;
-  cout << "m: " << m << endl;
   merge_sort(V ,p,m);
   merge_sort(V ,m+1,r);
   merge(V ,p,m,r);
@@ -92,7 +90,6 @@ void merge_sort(vector<int>& V, int p, int r) {
 
 void merge_sort(vector<int>& V) {
   if(V.size() <= 1) return; // Array vazio ou com 1 elemento já está ordenado
-  cout << "inside merge sort. V.size() - 1 = " << V.size() - 1 << endl;
   merge_sort(V, 0, V.size() - 1);
 }
 

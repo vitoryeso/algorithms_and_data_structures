@@ -14,24 +14,20 @@ public:
     size_t rows, cols;
 
     // Construtor para matriz quadrada n×n
-    Matrix(int n) : rows(n), cols(n), data(n * n, 0) {}
+    Matrix(int n) : data(n * n, 0), rows(n), cols(n) {}
 
     // Construtor para matriz com dimensões específicas
-    Matrix(size_t r, size_t c) : rows(r), cols(c), data(r * c, 0) {}
+    Matrix(size_t r, size_t c) : data(r * c, 0), rows(r), cols(c) {}
 
-    // Construtor a partir de iteradores (para compatibilidade)
-    template<typename Iter>
-    Matrix(Iter begin, Iter end) : rows(0), cols(0) {
-        // Este construtor é mais complexo para manter compatibilidade
-        // Vamos simplificar assumindo que recebemos um vector<vector>
-        if (begin != end) {
-            rows = std::distance(begin, end);
-            if (rows > 0) {
-                cols = begin->size();
-                data.reserve(rows * cols);
-                for (auto it = begin; it != end; ++it) {
-                    data.insert(data.end(), it->begin(), it->end());
-                }
+    // Construtor a partir de vector<vector> (para compatibilidade)
+    template<typename T>
+    Matrix(const std::vector<std::vector<T>>& vec) : rows(0), cols(0) {
+        if (!vec.empty()) {
+            rows = vec.size();
+            cols = vec[0].size();
+            data.reserve(rows * cols);
+            for (const auto& row : vec) {
+                data.insert(data.end(), row.begin(), row.end());
             }
         }
     }

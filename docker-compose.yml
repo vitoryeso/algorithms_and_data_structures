@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  matmul-benchmark:
+    build: .
+    container_name: matmul-benchmark-container
+    volumes:
+      # Mount current directory to preserve results
+      - .:/app
+      # Mount results directory for easy access
+      - ./results:/app/results
+    environment:
+      - PYTHONUNBUFFERED=1
+    # Override default command to run benchmarks
+    command: >
+      python3 benchmark_update.py 
+      --runs 1 
+      --min-size 2 
+      --max-size 4096 
+      --min-val -10 
+      --max-val 10 
+      --output results/small_values_benchmark.csv 
+      --plot results/small_values_benchmark.png
+    # Resource limits (optional - adjust based on your system)
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+        reservations:
+          memory: 2G
+
+  # Service for large values benchmark
+  matmul-benchmark-large:
+    build: .
+    container_name: matmul-benchmark-large-container
+    volumes:
+      - .:/app
+      - ./results:/app/results
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: >
+      python3 benchmark_update.py 
+      --runs 1 
+      --min-size 2 
+      --max-size 4096 
+      --min-val -1000 
+      --max-val 1000 
+      --output results/large_values_benchmark.csv 
+      --plot results/large_values_benchmark.png
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+        reservations:
+          memory: 2G
+
+  # Service for random values benchmark
+  matmul-benchmark-random:
+    build: .
+    container_name: matmul-benchmark-random-container
+    volumes:
+      - .:/app
+      - ./results:/app/results
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: >
+      python3 benchmark_update.py 
+      --runs 1 
+      --min-size 2 
+      --max-size 4096 
+      --min-val -100 
+      --max-val 100 
+      --output results/random_values_benchmark.csv 
+      --plot results/random_values_benchmark.png
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+        reservations:
+          memory: 2G
