@@ -507,6 +507,24 @@ class BenchmarkPlotter:
         df_ds_filtered = df_ds[df_ds['size'] < max_size]
         print(f"Filtered out largest size {max_size:,} from datastructures plot")
 
+        # Cut X axis to ensure all curves have the same number of points
+        common_sizes = None
+        if not df_ds_filtered.empty:
+            grouped = df_ds_filtered.groupby(['data_structure', 'operation'])
+            for _, g in grouped:
+                sizes_set = set(g['size'].unique().tolist())
+                if common_sizes is None:
+                    common_sizes = sizes_set
+                else:
+                    common_sizes &= sizes_set
+
+        if common_sizes:
+            common_sizes_list = sorted(common_sizes)
+            df_ds_filtered = df_ds_filtered[df_ds_filtered['size'].isin(common_sizes_list)]
+            print(f"Aligned all curves to common sizes ({len(common_sizes_list)} points): {', '.join(map(lambda v: f'{int(v):,}', common_sizes_list))}")
+        else:
+            print("Warning: Could not find common sizes across curves; using available sizes per curve.")
+
         fig, ax = plt.subplots(figsize=(14, 10))
 
         # Get unique combinations
@@ -551,7 +569,7 @@ class BenchmarkPlotter:
             title += " (Log Y Scale)"
         self._format_plot(ax, title, "Size (n)", "Time (seconds)")
 
-        # Set explicit X ticks based on unique sizes to ensure proper display
+        # Set explicit X ticks based on unique sizes (common across curves)
         all_sizes = sorted(df_ds_filtered['size'].unique())
         ax.set_xticks(all_sizes)
 

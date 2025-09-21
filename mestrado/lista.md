@@ -369,11 +369,28 @@ Para o ovetor inversamente ordenado e aleatório, o merge sort é melhor
 
 ### **4. Mostre numericamente com suas implementações dos algoritmos de multiplicação de matrizes que o algoritmo de Strassen é mais rápido que o algoritmo convencional.**
 
+Strassen reduz a árvore de recursão: em vez de 8 multiplicações recursivas por nível, realiza 7 multiplicações e compensa com algumas somas/subtrações. Esse trade-off diminui a complexidade assintótica de O(n^3) para O(n^2.81).
+
+- **Implementação**: C++ com `matmul_naive` e `matmul_strassen(cutoff=64)`. Onde o cutoff é o tamanho mínimo para usar matmul_naive como "fallback"
+- **Medições**: script `benchmark_matmul.py` (múltiplas execuções por tamanho, média) e gráfico com curvas teóricas O(n^3) e O(n^{2.81}) para comparação.
+- **Resultado**: como esperado, a curva de Strassen cresce mais lentamente; em tamanhos pequenos a diferença pode ser sutil pelo overhead de somas, mas a tendência favorece Strassen à medida que (n) cresce.
+
+> Observação: o ideal é testar com valores maiores de n para evidenciar melhor a diferença; na figura atual foram incluídos tamanhos até 2048.
+
+<img src="../matmul_benchmark_plot.png" alt="Benchmark Strassen vs Convencional" width="2000">
+
 
 
 ### **5. Escolha um algoritmo recorrente para aplicar um dos 4 métodos de resolução de recorrência descritos no capítulo 4 para medir o custo da recorrência do algoritmo escolhido. Compare o resultado com medições de tempo.**
 
 ### **6. O problema de balanceamento de cargas busca atribuir tarefas de tamanhos diferentes a trabalhadores, de modo a minimizar a carga máxima que um trabalhador irá executar. Em um problema em que temos n tarefas e k trabalhadores (n > k), considere que o balanceador irá distribuir as n/k primeiras tarefas para o primeiro trabalhador, as n/k tarefas seguintes para o segundo trabalhador, e assim por diante. Mostre numericamente como permutar aleatoriamente os dados de entrada, que são as cargas de cada tarefa, pode influenciar na solução desse balanceador.**
 
+
+
+7. ### **Implemente as funções da seção 6.5 (Priority queues) do livro do Cormen  4th Ed. em sua linguagem favorita e proponha um exemplo de uso com uma  demonstração.**
+
+8. ### **Mostre com experimentos numéricos quando suas próprias  implementações de Quicksort e do Quicksort aleatório são mais  vantajosas, comparando uma com a outra.**
+
+9. ### **Mostre com experimentos  numéricos quando o Radix-sort com o Count-sort é mais rápido que o  Count-sort sozinho. Utilize suas próprias implementações ou alguma  implementação existente explicando os resultados.**
 
 **Vítor Yeso Fidelis Freitas - Programa de Pós Graduação em Engenharia Elétrica e Computação - 2025.2**

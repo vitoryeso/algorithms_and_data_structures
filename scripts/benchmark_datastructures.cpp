@@ -858,6 +858,8 @@ int main(int argc, char* argv[]) {
             for (int size : sizes) {
                 if (!quiet) cout << "  " << operation << " n=" << size << ": ";
 
+                std::vector<double> times_this_size;
+
                 for (int run = 0; run < num_runs; run++) {
                     if (!quiet) cout << "." << flush;
 
@@ -867,6 +869,7 @@ int main(int argc, char* argv[]) {
 
                         all_results.emplace_back(size, ds, operation, run, seeds[run], time,
                                                min_val, max_val);
+                        times_this_size.push_back(time);
                     } catch (const exception& e) {
                         cerr << "Erro em " << ds << " " << operation << " n=" << size
                              << " run=" << run << ": " << e.what() << endl;
@@ -874,7 +877,24 @@ int main(int argc, char* argv[]) {
                     }
                 }
 
-                if (!quiet) cout << " ✓" << endl;
+                if (!quiet) {
+                    // Calcula estatísticas locais para este tamanho
+                    double mean_t = accumulate(times_this_size.begin(), times_this_size.end(), 0.0) / times_this_size.size();
+                    std::vector<double> sorted_times = times_this_size;
+                    double median_t = calculate_median(sorted_times);
+                    double std_t = calculate_std(times_this_size, mean_t);
+                    double min_t = *min_element(times_this_size.begin(), times_this_size.end());
+                    double max_t = *max_element(times_this_size.begin(), times_this_size.end());
+
+                    // Imprime em milissegundos
+                    cout << " ✓ "
+                         << fixed << setprecision(3)
+                         << "média=" << (mean_t * 1000.0) << " ms"
+                         << ", mediana=" << (median_t * 1000.0) << " ms"
+                         << ", mín=" << (min_t * 1000.0) << " ms"
+                         << ", máx=" << (max_t * 1000.0) << " ms"
+                         << ", desvio=" << (std_t * 1000.0) << " ms" << endl;
+                }
             }
         }
 
