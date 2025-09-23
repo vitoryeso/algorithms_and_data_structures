@@ -95,7 +95,7 @@ void merge_sort(vector<int>& V) {
 
 void quick_sort(vector<int>& V, const string pivot_choice) {
         if(V.size() <= 1) return; // Array vazio ou com 1 elemento já está ordenado
-        
+
         if(pivot_choice == "random") randomized_quick_sort(V, 0, V.size() - 1);
         else if(pivot_choice == "median3") median3_quick_sort(V, 0, V.size() - 1);
         else if(pivot_choice == "last") quick_sort(V, 0, V.size() - 1);
@@ -124,39 +124,39 @@ int partition(vector<int>& V, int p, int r) {
     return i;
 }
 
-void randomized_quick_sort(vector<int>& V, const unsigned p, const unsigned r) {
+void randomized_quick_sort(vector<int>& V, int p, int r) {
     if(r > p) {
-        unsigned q = randomized_partition(V, p, r);
+        int q = randomized_partition(V, p, r);
         randomized_quick_sort(V, p, q - 1);
         randomized_quick_sort(V, q + 1, r);
     }
 }
 
-const unsigned randomized_partition(vector<int>& V, const unsigned p, const unsigned r) {
+int randomized_partition(vector<int>& V, int p, int r) {
     if(p >= r) return p; // Caso base para arrays pequenos
-    
+
     random_device dev;
     mt19937 rng(dev());
-    uniform_int_distribution<mt19937::result_type> dist(p, r); 
-   
+    uniform_int_distribution<int> dist(p, r);
+
     // swap between a random position and the last element
     swap(V[dist(rng)], V[r]);
     return partition(V, p, r);
 }
 
-void median3_quick_sort(vector<int>& V, const unsigned p, const unsigned r) {
+void median3_quick_sort(vector<int>& V, int p, int r) {
     if(r > p) {
-        unsigned q = median3_partition(V, p, r);
+        int q = median3_partition(V, p, r);
         median3_quick_sort(V, p, q - 1);
         median3_quick_sort(V, q + 1, r);
     }
 }
 
-const unsigned median3_partition(vector<int>& V, const unsigned p, const unsigned r) {
+int median3_partition(vector<int>& V, int p, int r) {
     if(p >= r) return p; // Caso base para arrays pequenos
-    
+
     int provId = p + (r - p)/2;
-    if(V[p] > V[provId]) { 
+    if(V[p] > V[provId]) {
         if(V[p] < V[r]) swap(V[p], V[r]);
         else if(V[provId] > V[r]) swap(V[provId], V[r]);
     }

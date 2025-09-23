@@ -391,6 +391,31 @@ Strassen reduz a árvore de recursão: em vez de 8 multiplicações recursivas p
 
 8. ### **Mostre com experimentos numéricos quando suas próprias  implementações de Quicksort e do Quicksort aleatório são mais  vantajosas, comparando uma com a outra.**
 
+Utilizamos um benchmark dedicado comparando três variações do Quick Sort: pivô no último elemento (`last`), pivô aleatório (`random`) e pivô baseado na mediana (`median3`). Os dados de entrada seguem uma distribuição normal com média 0, variando o desvio padrão em 6 níveis (100, 500, 1000, 5000, 10000, 50000) para avaliar o impacto de diferentes dispersões. Os tamanhos dos arrays variam de 1000 a 1.000.000 elementos, com medições de tempo em milissegundos.
+
+<img src="../plots/quicksort_q8_level1.png" alt="Quicksort nível 1 (σ=100)" width="2000">
+<img src="../plots/quicksort_q8_level2.png" alt="Quicksort nível 2 (σ=500)" width="2000">
+<img src="../plots/quicksort_q8_level3.png" alt="Quicksort nível 3 (σ=1000)" width="2000">
+<img src="../plots/quicksort_q8_level4.png" alt="Quicksort nível 4 (σ=5000)" width="2000">
+<img src="../plots/quicksort_q8_level5.png" alt="Quicksort nível 5 (σ=10000)" width="2000">
+<img src="../plots/quicksort_q8_level6.png" alt="Quicksort nível 6 (σ=50000)" width="2000">
+
 9. ### **Mostre com experimentos  numéricos quando o Radix-sort com o Count-sort é mais rápido que o  Count-sort sozinho. Utilize suas próprias implementações ou alguma  implementação existente explicando os resultados.**
+
+Utilizamos um benchmark dedicado comparando diretamente `counting_sort` e `radix_sort` (LSD com counting estável por dígito), com geração de dados inteiros uniformes no intervalo [0, k]. Para evidenciar o ponto de cruzamento, configuramos k = n + 1 e variamos n de 10^2 até 12×10^6 usando base 65.536 no radix (o que resulta em ~2 passadas para os intervalos testados). Resultado principal: para tamanhos pequenos e médios o `counting_sort` é competitivo; a partir de n ≈ 4 milhões o `radix_sort` passa a ser mais rápido e a vantagem cresce, pois seu custo efetivo fica proporcional ao número de passadas (constante) vezes n, enquanto o `counting_sort` paga o custo de O(k) (alocação/zeragem/prefixo) que cresce com n quando k = n + 1.
+
+<img src="../plots/num_sorting_k_eq_n_plus_1_12M.png" alt="Counting vs Radix (k=n+1, base=65536)" width="2000">
+
+Observação: a base 65.536 reduz o número de passadas do radix (d≈2), tornando-o mais eficiente para intervalos grandes. Para k pequenos (p.ex., 10^3–10^5), o `counting_sort` tende a vencer por constantes menores e melhor localidade.
+
+Gráficos adicionais:
+
+- Superfície 3D (tempo × tamanho × passadas do radix):
+
+  <img src="plot_radix_passes.jpg" alt="Radix: superfície tempo vs n × passes" width="2000">
+
+- Curvas 2D com múltiplas passadas do radix e counting como baseline:
+
+  <img src="../plots/num_sorting_radix_passes_curves.png" alt="Counting vs Radix por número de passadas" width="2000">
 
 **Vítor Yeso Fidelis Freitas - Programa de Pós Graduação em Engenharia Elétrica e Computação - 2025.2**

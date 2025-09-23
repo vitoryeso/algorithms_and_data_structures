@@ -26,6 +26,10 @@ benchmark_sorting: ./scripts/benchmark_sorting.cpp $(SRCS_ALG_CPP)
 	mkdir -p ./bin
 	g++ $(CXXFLAGS) -o ./bin/benchmark_sorting ./scripts/benchmark_sorting.cpp $(SRCS_ALG_CPP)
 
+benchmark_quicksort: ./scripts/benchmark_quicksort.cpp $(SRCS_ALG_CPP)
+	mkdir -p ./bin
+	g++ $(CXXFLAGS) -o ./bin/benchmark_quicksort ./scripts/benchmark_quicksort.cpp $(SRCS_ALG_CPP)
+
 benchmark_datastructures: ./scripts/benchmark_datastructures.cpp ./data_structures/cpp/vector.cpp ./data_structures/cpp/my_vector.cpp ./data_structures/cpp/heap.cpp ./data_structures/cpp/my_queue_linkedlist.cpp ./data_structures/cpp/my_queue_vector.cpp
 	mkdir -p ./bin
 	g++ $(CXXFLAGS) -o ./bin/benchmark_datastructures ./scripts/benchmark_datastructures.cpp ./data_structures/cpp/vector.cpp ./data_structures/cpp/my_vector.cpp ./data_structures/cpp/heap.cpp ./data_structures/cpp/my_queue_linkedlist.cpp ./data_structures/cpp/my_queue_vector.cpp

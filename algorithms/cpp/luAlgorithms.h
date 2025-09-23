@@ -95,12 +95,12 @@ void quick_sort(vector<int>& V, const string pivot_choice);
 void quick_sort(vector<int>& V);
 
 void quick_sort(vector<int>& V, int p, int r);
-void randomized_quick_sort(vector<int>& V, const unsigned p, const unsigned r);
-void median3_quick_sort(vector<int>& V, const unsigned p, const unsigned r);
+void randomized_quick_sort(vector<int>& V, int p, int r);
+void median3_quick_sort(vector<int>& V, int p, int r);
 
 int partition(vector<int>& V, int p, int r);
-const unsigned randomized_partition(vector<int>& V, const unsigned p, const unsigned r);
-const unsigned median3_partition(vector<int>& V, const unsigned p, const unsigned r);
+int randomized_partition(vector<int>& V, int p, int r);
+int median3_partition(vector<int>& V, int p, int r);
 
 void counting_sort(vector<int>& V, const int k);
 void counting_sort(vector<int>& V);
