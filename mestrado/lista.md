@@ -393,18 +393,18 @@ Strassen reduz a árvore de recursão: em vez de 8 multiplicações recursivas p
 
 Utilizamos um benchmark dedicado comparando três variações do Quick Sort: pivô no último elemento (`last`), pivô aleatório (`random`) e pivô baseado na mediana (`median3`). Os dados de entrada seguem uma distribuição normal com média 0, variando o desvio padrão em 6 níveis (100, 500, 1000, 5000, 10000, 50000) para avaliar o impacto de diferentes dispersões. Os tamanhos dos arrays variam de 1000 a 1.000.000 elementos, com medições de tempo em milissegundos.
 
-<img src="../plots/quicksort_q8_level1.png" alt="Quicksort nível 1 (σ=100)" width="2000">
-<img src="../plots/quicksort_q8_level2.png" alt="Quicksort nível 2 (σ=500)" width="2000">
-<img src="../plots/quicksort_q8_level3.png" alt="Quicksort nível 3 (σ=1000)" width="2000">
-<img src="../plots/quicksort_q8_level4.png" alt="Quicksort nível 4 (σ=5000)" width="2000">
-<img src="../plots/quicksort_q8_level5.png" alt="Quicksort nível 5 (σ=10000)" width="2000">
-<img src="../plots/quicksort_q8_level6.png" alt="Quicksort nível 6 (σ=50000)" width="2000">
+<img src="../plots/quicksort_q8_level1.png" alt="Quicksort nível 1 (σ=100)" width="600">
+<img src="../plots/quicksort_q8_level2.png" alt="Quicksort nível 2 (σ=500)" width="600">
+<img src="../plots/quicksort_q8_level3.png" alt="Quicksort nível 3 (σ=1000)" width="600">
+<img src="../plots/quicksort_q8_level4.png" alt="Quicksort nível 4 (σ=5000)" width="600">
+<img src="../plots/quicksort_q8_level5.png" alt="Quicksort nível 5 (σ=10000)" width="600">
+<img src="../plots/quicksort_q8_level6.png" alt="Quicksort nível 6 (σ=50000)" width="600">
 
 9. ### **Mostre com experimentos  numéricos quando o Radix-sort com o Count-sort é mais rápido que o  Count-sort sozinho. Utilize suas próprias implementações ou alguma  implementação existente explicando os resultados.**
 
 Utilizamos um benchmark dedicado comparando diretamente `counting_sort` e `radix_sort` (LSD com counting estável por dígito), com geração de dados inteiros uniformes no intervalo [0, k]. Para evidenciar o ponto de cruzamento, configuramos k = n + 1 e variamos n de 10^2 até 12×10^6 usando base 65.536 no radix (o que resulta em ~2 passadas para os intervalos testados). Resultado principal: para tamanhos pequenos e médios o `counting_sort` é competitivo; a partir de n ≈ 4 milhões o `radix_sort` passa a ser mais rápido e a vantagem cresce, pois seu custo efetivo fica proporcional ao número de passadas (constante) vezes n, enquanto o `counting_sort` paga o custo de O(k) (alocação/zeragem/prefixo) que cresce com n quando k = n + 1.
 
-<img src="../plots/num_sorting_k_eq_n_plus_1_12M.png" alt="Counting vs Radix (k=n+1, base=65536)" width="2000">
+<img src="../plots/num_sorting_k_eq_n_plus_1_12M.png" alt="Counting vs Radix (k=n+1, base=65536)" width="600">
 
 Observação: a base 65.536 reduz o número de passadas do radix (d≈2), tornando-o mais eficiente para intervalos grandes. Para k pequenos (p.ex., 10^3–10^5), o `counting_sort` tende a vencer por constantes menores e melhor localidade.
 
@@ -412,10 +412,34 @@ Gráficos adicionais:
 
 - Superfície 3D (tempo × tamanho × passadas do radix):
 
-  <img src="plot_radix_passes.jpg" alt="Radix: superfície tempo vs n × passes" width="2000">
+  <img src="../plots/num_sorting_radix_surface.png" alt="Radix: superfície tempo vs n × passes" width="2000">
 
 - Curvas 2D com múltiplas passadas do radix e counting como baseline:
 
-  <img src="../plots/num_sorting_radix_passes_curves.png" alt="Counting vs Radix por número de passadas" width="2000">
+  <img src="../plots/num_sorting_radix_passes_curves.png" alt="Counting vs Radix por número de passadas" width="600">
+  
+  ### 10. Implemente o algoritmo de mínimo e máximo simultâneos da seção 9.1  do livro do Cormen, 4ª Ed., na sua linguagem favorita e mostre através  de medição de tempo que é mais rápido que a abordagem não-simultânea  para um vetor de entrada suficientemente grande.
+  
+  ### 11. Implemente os algoritmos de seleção aleatória e seleção das seções  9.2 e 9.3 do livro do Cormen, 4ª Ed., e realize experimentos numéricos  para demonstrar em quais casos um tem vantagens com relação ao outro.
+  
+  ### 12. Implemente o algoritmo da mediana ponderada e use-o para resolver o item *e* do Problema 9-3 do Cormen, 4ª Ed.
+  
+  ### 13. Implemente as estruturas de dados: 1) array ordenado, 2) lista  encadeada não ordenada, e 3) árvore de busca binária balanceada (e.g.,  AVL, Red-Black trees). Em seguida, insira n elementos em cada estrutura  de dados. Depois disso, considerando diferentes valores de n, compare os tempos de inserção e busca de cada uma.
+  
+  ### 14. Implemente tabelas hash com encadeamento e usando endereçamento  aberto. Realize experimentos para mostrar numericamente as vantagens e  desvantagens de cada caso, considerando as operações de inserção, busca e remoção.
+  
+  ### 15. Compare implementações de tabelas hash com hashing duplo e probing  linear. Analise e justifique os resultados dos seus experimentos.
+  
+  ### 16. Defina um grafo acíclico direcionado relacionado a área do seu  mestrado/doutorado e use a sua implementação para ordenar  topologicamente esse grafo.
+  
+  ### 17. Implemente e aponte vantagens e desvantagens dos algoritmos de  Kruskal e Prim para gerar uma árvore de abrangência mínima. Use exemplos práticos da sua área para demonstrar suas conclusões.
+  
+  ### 18. Implemente o algoritmo do Dijkstra e utilize-o para resolver um problema prático da sua área de interesse.
+  
+  ### 19. Estude e apresente como as primitivas de paralelismo *spawn*, *sync*, and *parallel for* podem ser relacionadas com o padrão e modelo de programação OpenMP.
+  
+  ### 30. Escolha um dos algoritmos que já implementou nas listas anteriores  que poderiam se beneficiar de paralelismo e implemente-os utilizando  OpenMP.
+  
+  ### 31. Apresente uma análise experimental do algoritmo implementado na  questão 2 para realizar suas medições (sugestão: utilizar o NPAD).
 
 **Vítor Yeso Fidelis Freitas - Programa de Pós Graduação em Engenharia Elétrica e Computação - 2025.2**

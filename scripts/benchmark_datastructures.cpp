@@ -13,6 +13,7 @@
 #include <sys/utsname.h>
 #include <deque>
 #include <climits>
+#include <cctype>
 #include "data_structures/cpp/my_vector.h"
 #include "data_structures/cpp/heap.h"
 #include "data_structures/cpp/my_queue_linkedlist.h"
@@ -606,6 +607,7 @@ void print_usage(const string& program_name) {
     cout << "Opções:" << endl;
     cout << "  --data-structures <lista>  Estruturas separadas por vírgula (padrão: vector,heap,queue,my_vector,my_heap,my_queue_linkedlist,my_queue_vector,my_stack)" << endl;
     cout << "  --operations <lista>       Operações separadas por vírgula (depende da estrutura)" << endl;
+    cout << "  --function-classes <lista> Classes de funções separadas por vírgula (busca,inserção,deleção | search,insertion,deletion)" << endl;
     cout << "  --sizes <tamanhos>         Lista de tamanhos separados por espaço" << endl;
     cout << "  --max-size <max>           Tamanho máximo (gera tamanhos até max)" << endl;
     cout << "  --min-size <min>           Tamanho mínimo (padrão: 1000)" << endl;
@@ -633,6 +635,7 @@ void print_usage(const string& program_name) {
     cout << "Exemplos:" << endl;
     cout << "  " << program_name << " --data-structures vector,heap --operations push_back,insert --sizes 1000 5000 10000" << endl;
     cout << "  " << program_name << " --max-size 50000 --runs 5 --output-csv ds_results.csv" << endl;
+    cout << "  " << program_name << " --data-structures vector,heap --function-classes busca,deleção --max-size 10000" << endl;
 }
 
 std::vector<string> split_string(const string& s, char delimiter) {
@@ -645,10 +648,59 @@ std::vector<string> split_string(const string& s, char delimiter) {
     return tokens;
 }
 
+// Normaliza a classe de função para valores canônicos: "search", "insertion", "deletion"
+static string normalize_function_class(string cls) {
+    // lower-case
+    transform(cls.begin(), cls.end(), cls.begin(), [](unsigned char c){ return static_cast<char>(tolower(c)); });
+    // Remove espaços ao redor
+    auto trim = [](string &x){
+        size_t a = x.find_first_not_of(" \t\n\r");
+        size_t b = x.find_last_not_of(" \t\n\r");
+        if (a == string::npos) { x.clear(); return; }
+        x = x.substr(a, b - a + 1);
+    };
+    trim(cls);
+
+    // Mapeia variações em PT/EN (com e sem acento) para canônicos
+    if (cls == "busca" || cls == "search") return "search";
+    if (cls == "insercao" || cls == "inserção" || cls == "insertion" || cls == "inserir") return "insertion";
+    if (cls == "delecao" || cls == "deleção" || cls == "deletion" || cls == "remocao" || cls == "remoção" || cls == "remover" || cls == "delete") return "deletion";
+    return cls; // devolve como está (será validado adiante)
+}
+
+static std::vector<string> operations_for_classes(const string& ds, const std::vector<string>& classes_raw) {
+    // Normaliza classes
+    std::vector<string> classes;
+    classes.reserve(classes_raw.size());
+    for (auto c : classes_raw) classes.push_back(normalize_function_class(c));
+
+    std::vector<string> ops;
+    auto add = [&](const string& op){ if (find(ops.begin(), ops.end(), op) == ops.end()) ops.push_back(op); };
+
+    for (const auto& c : classes) {
+        if (c == "search") {
+            if (ds == "vector" || ds == "my_vector") add("access");
+            // Demais estruturas não têm busca definida neste benchmark
+        } else if (c == "insertion") {
+            if (ds == "vector") { add("push_back"); add("insert_middle"); }
+            else if (ds == "heap" || ds == "my_heap") { add("insert"); }
+            else if (ds == "queue" || ds == "my_queue_linkedlist" || ds == "my_queue_vector") { add("enqueue"); }
+            else if (ds == "my_vector") { add("push_back"); }
+            else if (ds == "my_stack") { add("push"); }
+        } else if (c == "deletion") {
+            if (ds == "heap" || ds == "my_heap") { add("extract_max"); }
+            else if (ds == "queue" || ds == "my_queue_linkedlist" || ds == "my_queue_vector") { add("dequeue"); }
+            else if (ds == "my_stack") { add("pop"); }
+        }
+    }
+    return ops;
+}
+
 int main(int argc, char* argv[]) {
     // Parâmetros padrão
     std::vector<string> data_structures = {"vector", "heap", "queue", "my_vector", "my_heap", "my_queue_linkedlist", "my_queue_vector", "my_stack"};
     std::vector<string> operations = {"push_back", "insert", "enqueue"}; // Operações padrão por estrutura
+    std::vector<string> function_classes; // Classes de funções opcionais
     std::vector<int> sizes;
     int max_size = 50000;
     int min_size = 1000;
@@ -680,6 +732,12 @@ int main(int argc, char* argv[]) {
                 return 1;
             }
             operations = split_string(argv[++i], ',');
+        } else if (arg == "--function-classes") {
+            if (i + 1 >= argc) {
+                cerr << "Erro: --function-classes requer um valor" << endl;
+                return 1;
+            }
+            function_classes = split_string(argv[++i], ',');
         } else if (arg == "--sizes") {
             sizes.clear();
             i++;
@@ -798,6 +856,14 @@ int main(int argc, char* argv[]) {
             if (i < operations.size() - 1) cout << ", ";
         }
         cout << endl;
+        if (!function_classes.empty()) {
+            cout << "Classes: ";
+            for (size_t i = 0; i < function_classes.size(); i++) {
+                cout << normalize_function_class(function_classes[i]);
+                if (i < function_classes.size() - 1) cout << ", ";
+            }
+            cout << endl;
+        }
         cout << "Tamanhos: ";
         for (size_t i = 0; i < sizes.size(); i++) {
             cout << sizes[i];
@@ -842,8 +908,13 @@ int main(int argc, char* argv[]) {
         }
 
         // Filtra operações válidas
+        std::vector<string> desired_ops = operations;
+        if (!function_classes.empty()) {
+            desired_ops = operations_for_classes(ds, function_classes);
+        }
+
         std::vector<string> ops_to_test;
-        for (const auto& op : operations) {
+        for (const auto& op : desired_ops) {
             if (find(valid_ops.begin(), valid_ops.end(), op) != valid_ops.end()) {
                 ops_to_test.push_back(op);
             }
