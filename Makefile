@@ -170,4 +170,7 @@ test_all: $(SRCS_TESTS) $(SRCS_ALG_CPP) $(SRCS_DS_CPP) $(SRCS_DS_C) $(SRCS_UTILS
 test_matrix: ./tests/matrix_multiplication_test.cc $(SRCS_ALG_CPP) $(SRCS_DS_CPP) $(SRCS_DS_C) $(SRCS_UTILS)
 	mkdir -p ./bin
 	g++ $(CXXFLAGS) $^ -o ./bin/test_matrix $(LDFLAGS)
-	./bin/test_matrix
+
+create_dag: create_random_dag.cpp
+	mkdir -p ./bin
+	g++ $(CXXFLAGS) create_random_dag.cpp -o ./bin/create_dag
